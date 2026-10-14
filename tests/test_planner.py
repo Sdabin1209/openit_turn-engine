@@ -833,8 +833,8 @@ def test_84_user_who_keeps_changing_confirmed_value_ends():
     s.turn([ans(s, DR, "안 마시고요"), ans(s, SL, "7시간", n=1)])
     for h in range(8, 20):
         s.turn([ans(s, SL, f"{h}시간")])
-    # 확인 대기가 계속 새 값으로 대체되어도 상한에서 확인 중단이 일어난다
-    assert s.cstop or s.action() != "ASK_CONFIRM" or s.pr["confirm_counts"][0]["count"] <= 3
+    # 확인 대기가 계속 새 값으로 대체되어도 확인 상한(2)에서 확인 중단이 일어나 더 묻지 않는다
+    assert s.cstop == [SL] and s.action() != "ASK_CONFIRM"
 
 
 def test_84_user_who_keeps_refusing_finish_gets_staff_help():

@@ -26,6 +26,11 @@ def validator(name):
     return Draft202012Validator(json.loads((PKG_SCHEMAS / f"{name}.json").read_text(encoding="utf-8")))
 
 
+def test_engine_version_matches_package_metadata():
+    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert f'version = "{te.ENGINE_VERSION}"' in text
+
+
 def test_versions():
     assert isinstance(te.ENGINE_VERSION, str) and re.fullmatch(r"\d+\.\d+\.\d+", te.ENGINE_VERSION)
     assert te.SUPPORTED_RUNTIME_CONTRACT_VERSION == int((PKG_SCHEMAS / "CONTRACT_VERSION").read_text().strip())
