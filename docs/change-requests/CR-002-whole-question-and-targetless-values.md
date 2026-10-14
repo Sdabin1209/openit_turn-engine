@@ -1,0 +1,17 @@
+# CR-002 문항 전체·대상 없음에 붙은 값 항목의 취급
+
+- 대상: `docs/rules/answer_normalizer.md` 5절, `answer_judge.md` 6절 표
+- 상태: 요청
+
+## 부족한 것
+
+입력 계약은 값이 있는 항목(`ANSWERED_INTENT`, 값이 있는 `CORRECTION_MARKED`)의 대상으로 `WholeQuestion`을 허용하고, `CORRECTION_MARKED`는 대상이 `null`이어도 스키마를 통과한다. 규칙은 이때를 정하지 않는다. 값을 어느 슬롯에 둘지 정할 수 없다.
+
+## 지금 구현(임시 해석)
+
+- 값이 있는데 대상이 `WholeQuestion`이면 Normalizer가 문제 `AMBIGUOUS`로 표시한다(슬롯 하나짜리 문항이어도 슬롯을 고르지 않는다). Judge는 문항 대상의 애매 판정을 낸다.
+- 값이 있는데 대상이 `null`이면 Judge가 무관으로 본다(저장할 곳이 없다).
+
+## 제안
+
+- 슬롯이 하나뿐인 문항이면 그 슬롯으로 본다는 규칙을 둘지, 아니면 Parser 계약에서 값 항목의 대상을 `SlotRef`로 제한할지 정하기.
