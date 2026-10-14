@@ -1,7 +1,7 @@
 # CR-003 위험 문구(`risk_phrases`)와 `utterance` 사용 규칙
 
 - 대상: `AnswerJudgeInput.utterance`, `AnswerJudgeInput.risk_phrases`, `docs/rules/answer_judge.md`
-- 상태: 요청. **이 부분은 구현하지 않았다.**
+- 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것
 
@@ -19,3 +19,11 @@ Judge 입력에는 발화 원문과 세션 설정의 위험 문구 목록이 있
 ## 제안
 
 - 안전망으로 쓰는 것이 의도라면 "발화에 위험 문구가 공백을 뺀 부분 문자열로 들어 있으면 `risk_signal.evidence`에 그 문구를 담는다"처럼 한 문장으로 정하기.
+
+## 결정 (헤드 답변, 2026-10-15) — 구현함
+
+원본 근거: `utterance`는 위험 표현 목록과 대조해 모델이 놓친 위급한 말을 잡기 위한 것(G2), `risk_phrases`는 원문에 들어 있으면 위험 신호로 보는 표현이다. 규칙: 발화에 목록의 표현이 공백을 뺀 부분 문자열로 들어 있으면 모델이 `RISK_SIGNAL`을 내지 않았어도 `risk_signal`을 만든다. `evidence`에는 **맞은 표현 자체**를 담아 발화 원문이 새지 않게 한다. 모델이 이미 위험 신호를 냈으면 그 근거를 먼저 두고, 그 근거에 이미 들어 있는 표현은 중복해 더하지 않는다(골든 G1: 모델 근거 "숨이 안 쉬어져요"만).
+
+- 코드: `judge.py: _Judge.run`(위험 표현 안전망). 모델 없이 동작한다.
+- 시험: `tests/test_judge.py`의 `test_risk_phrase_*`, 골든 G2·G9·S3c(`tests/test_golden.py`, 모두 일치).
+- 골든으로 정해진 곁가지: 위험 신호 단독·값 없는 정정 단독 발화의 결과는 `HAS_ANSWER`(골든 G1, C5). 이전 구현은 `REQUEST_ONLY`였다.

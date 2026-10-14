@@ -33,7 +33,7 @@ SUPPORTED_RUNTIME_CONTRACT_VERSION: int
 | 출력 보증 | 정상 반환한 값은 항상 출력 계약 스키마를 통과한다. 통과하지 못하면 `OutputContractError`(엔진 결함; 호출자는 재시도하지 말고 보고) |
 | 멱등 | 호출이 상태를 바꾸지 않으므로 같은 호출을 다시 해도 같다 |
 | 개인정보 | 입력을 로그로 남기지 않는다. 오류 메시지에도 값이 없다 |
-| 확인 대기 ID | `write_record`가 `pnd-`로 시작하는 결정적 ID를 만든다(CR-004). 호출자는 이 값을 불투명 문자열로 다룬다 |
+| 확인 대기 ID | `write_record`가 `pnd-`로 시작하는 결정적 ID를 만든다(CR-004 결정: 유지). 호출자는 이 값을 불투명 문자열로 다룬다 |
 
 호출 순서와 입력 조립은 survey-service(Orchestrator)의 몫이다. 이 라이브러리는 `normalize → judge → write_record → plan` 순서를 강제하지 않지만, 입력 계약은 앞 컴포넌트의 출력을 전제로 한다(예: `judge`는 `normalize`의 `item_checks`를 `item_no`로 짝지어 쓰며 짝이 없으면 `ContractViolation`).
 
@@ -67,7 +67,7 @@ SUPPORTED_RUNTIME_CONTRACT_VERSION: int
 | 출력이 계약 위반 | `OutputContractError` | 같음 | 엔진 결함. 입력(비식별화)과 함께 turn-engine에 보고 |
 | 스키마 정수 버전 불일치 | 가져올 때 `RuntimeError` | 서비스가 뜨지 않음(조기 실패) | 소비자의 문진 스키마 버전과 맞는 엔진 태그를 설치 |
 | 규칙 해석이 소비자 기대와 다름 | 출력이 기대와 다름 | 대화 품질 | `docs/change-requests/`의 열린 요청을 확인, 새 요청 |
-| 안전과 닿는 열린 항목 | 모델이 위험 신호를 놓치면 Judge가 잡지 못함 | 위험 안내 누락 가능 | 현재 이 라이브러리는 `risk_phrases`를 쓰지 않는다(CR-003 응답 전) |
+| 모델이 위험 신호를 놓침 | Judge가 `risk_phrases`(공백을 뺀 부분 문자열)로 보완한다. 근거는 맞은 표현 자체 | 목록에 없는 표현은 놓친다 | `risk_phrases`는 의료진이 관리하는 값이다. 호출자는 세션 설정의 목록을 그대로 넘긴다 |
 
 ## 6. 소비자별 메모
 
@@ -79,4 +79,4 @@ SUPPORTED_RUNTIME_CONTRACT_VERSION: int
 
 ## 7. 열린 변경 요청
 
-`docs/change-requests/README.md`에 목록이 있다(CR-001~CR-008). 답이 오면 해당 해석을 확정하거나 고치고 MINOR를 올린다.
+`docs/change-requests/README.md`에 목록이 있다(CR-001~CR-009). CR-001~008은 헤드 답변과 골든 대조로 결정했고(각 파일의 "결정" 절), CR-009는 골든과 다른 62쌍의 분류다.

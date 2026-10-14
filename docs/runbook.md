@@ -22,6 +22,15 @@ python tests/fuzz_tool.py 120        # 무작위 발화 열 120개(수 분). 예
 
 수용 기준과 시험의 대응은 `docs/design.md` 6절. 기준 네 가지(결정성, 예시 입력→출력 스키마 통과, I/O·시간·난수 없음, 규칙 문서 밖 정책 없음)는 `tests/test_contract.py`와 `docs/change-requests/`가 맡는다.
 
+## 골든 비교
+
+`tests/golden/`는 헤드가 전달한 원본 요구사항 케이스의 정적 예시다(실행 결과가 아님). `tests/test_golden.py`가 868쌍을 비교하고, 같지 않은 62쌍은 `tests/golden_known.json`에 분류(b 해석 차이, c 예시 오류)와 근거를 둔다. 새로 다른 쌍이 생기거나 기존 다른 쌍이 같아지면 시험이 실패한다.
+
+```
+python -m pytest tests/test_golden.py -q
+python scripts/classify_golden.py     # 분류 파일 다시 만들기. 새 차이는 '?'가 되지 않도록 규칙이나 MANUAL을 먼저 고친다
+```
+
 ## 입출력 예시 다시 만들기
 
 예시(`examples/<시나리오>.<컴포넌트>.json`)는 `{"input", "output"}` 쌍이다. 입력은 시험용 오케스트레이터 흉내(`tests/sim.py`)가 만든 것이고, 시험은 입력이 입력 스키마를 통과하는지, 현재 코드의 출력이 `output`과 같은지, 출력이 출력 스키마를 통과하는지 확인한다.

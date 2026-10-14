@@ -1,7 +1,7 @@
 # CR-005 문장 재료(`sentence_materials`) 선택 규칙과 안내 채울 값
 
 - 대상: `docs/rules/dialogue_planner.md` 8절, `PlannerOutput.directive.sentence_materials`, `GuideItem.fill_value`
-- 상태: 요청
+- 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것
 
@@ -18,3 +18,19 @@
 ## 제안
 
 행동별로 담을 재료 목록과 `REMAINING_COUNT`의 형식(`Notice.value`의 `Value` 형식)을 규칙 문서에 적기.
+
+## 결정 (헤드 답변: 잠정 승인 + 골든 대조, 2026-10-15)
+
+골든 `PlannerOutput.directive.sentence_materials` 223쌍과 대조해 해석을 맞췄다(a). 골든이 보여 준 규칙:
+
+| 행동 | 재료 |
+|---|---|
+| 다음 문항 묻기, 모름 뒤 재질문 | 문항 문장 + 대상 문항 슬롯의 선택지 |
+| 거절 시 설명 후 재질문 | 문항 문장 + 거절 설명 + 선택지 |
+| 빠진 슬롯 되묻기, 구체화 요청 | 대상 슬롯의 다시 묻기 문장 + 선택지(문항 문장 없음) |
+| 확인 대기 확인, 정정 구체화, 종료·중단 확인, 대기 안내, 위험·직원 안내, 종료 인사 | 고정 문장만 |
+| 무관 안내(REDIRECT), 다시 말씀 요청(ASK_REPEAT) | 고정 문장 + 기다리는 답의 재료(문항 문장, 선택지 등) |
+
+고정 문장은 행동의 키와 알릴 것(재개, 문진 중단, 미룸)의 키만 담는다(기다리는 답의 키는 담지 않는다). 안내(GUIDE)의 `REMAINING_COUNT` 채울 값은 `Notice.value = {"amount": 남은 문항 수, "unit": "문항"}`(골든 E2, E5a, R11). 미룸 알림(DEFERRED)의 `slot`은 항상 `null`(골든 D3a, N7a). 빠진 슬롯 되묻기의 `reask_reasons`는 빈 목록(골든 B2, E1c, E3b, S8b).
+
+골든이 가려 주지 못한 것(남음): 무관한 말이 답과 함께 올 때 고정 문장 `OOS_NOTICE`를 더하는 규칙(골든 K4). 플래너 입력에는 무관 항목이 있었다는 정보가 없어 도출할 수 없다. 이 규칙을 원하면 `UtteranceJudgment`에 표시가 필요하다(스키마 변경 요청).

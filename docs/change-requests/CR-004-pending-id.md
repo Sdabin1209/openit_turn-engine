@@ -1,7 +1,7 @@
 # CR-004 확인 대기 ID를 결정적으로 만드는 방법
 
 - 대상: `docs/rules/record_writer.md` 7절 규칙 3("확인 대기 ID는 확인 대기 둠마다 새로 만든다"), `RecordWriterInput`
-- 상태: 요청
+- 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것
 
@@ -14,3 +14,7 @@
 ## 제안
 
 `RecordWriterInput`에 선택 필드 `pending_id_seed`(문자열; 호출자가 턴마다 유일한 값을 주입)를 추가하고 해시에 넣기. 또는 `new_pending_ids: [PendingId]`를 호출자가 주입. MINOR 추가다.
+
+## 결정 (헤드 답변, 2026-10-15)
+
+지금의 결정적 해시 방식을 유지한다(스키마 변경은 survey-service 소관이고 CONTRACT_VERSION이 오른다). 알려진 한계로 `docs/design.md` 7절에 적었다. 실제 문제가 되면 호출자가 주입하는 `pending_id_seed`를 survey-service와 함께 도입한다. 골든의 확인 대기 ID(X, Y, N1)는 자리표시자라 비교에서 새로 둔 ID만 가린다.

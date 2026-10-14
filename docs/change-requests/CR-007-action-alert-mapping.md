@@ -1,7 +1,7 @@
 # CR-007 규칙 용어와 Action·AlertKind 대응
 
 - 대상: `docs/rules/dialogue_planner.md` 8-1절 규칙 2·14, 규칙 1, `PlannerOutput`의 `Action`, `AlertKind`, `StaffAlertReason`
-- 상태: 요청
+- 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것
 
@@ -20,3 +20,9 @@
 ## 제안
 
 대응표를 규칙 문서에 적고, 도움 요청 사유 종류(`HELP_REQUEST` 등)를 `StaffAlertReason`에 추가할지 정하기(MINOR).
+
+## 결정 (헤드 답변 + 골든 대조, 2026-10-15)
+
+골든이 대응을 가렸다(a): 사람 요청은 행동 `STAFF_NOTICE`+알림 `USER_CALLED_STAFF`(골든 F1, F2, R3, R6), 도움 요청(알아듣지 못함의 연속, 종료 확인의 물음 상한)은 행동 `CALL_STAFF`+알림 `CALL_STAFF`(골든 F3, H5b). 처음 쓴 대응표는 두 행동이 서로 바뀌어 있었다. 도움 요청 알림의 사유는 빈 목록(골든 일치). `StaffAlertReason`에 도움 요청 사유를 더할지는 survey-service가 시작할 때 정한다. 위험+사람 요청 동시 발화의 알림 처리는 골든에 없다(남음).
+
+골든이 정한 곁가지: 종료 확인의 물음 상한에서 도움 요청은 기다리는 답이 없고(`awaiting: null`), 물은 횟수는 상한에서 더 오르지 않는다(골든 H5b). 그래서 그 뒤에도 매 턴 도움 요청과 알림이 반복된다("알림은 한 번"은 알아듣지 못함의 연속에만 적용).
