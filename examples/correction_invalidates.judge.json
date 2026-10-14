@@ -1,0 +1,150 @@
+{
+ "input": {
+  "affected_followups": [
+   {
+    "followups": [
+     "q_amount"
+    ],
+    "question_id": "q_drink"
+   }
+  ],
+  "item_checks": [
+   {
+    "item_no": 0,
+    "mismatched_slots": [],
+    "prerequisite_unmet": false,
+    "problems": [],
+    "risk_rule": null,
+    "standard_value": "안 마심",
+    "vs_current": "DIFFERENT",
+    "vs_pending": "NO_PENDING"
+   }
+  ],
+  "items": [
+   {
+    "guide_id": null,
+    "intent": "CORRECTION_MARKED",
+    "item_no": 0,
+    "progress_op": null,
+    "source_text": "안 마시고요",
+    "target": {
+     "question_id": "q_drink",
+     "repeat_key": "",
+     "slot_id": "status"
+    },
+    "value": "안 마시고요"
+   }
+  ],
+  "last_directive": {
+   "action": "ASK_NEXT",
+   "awaiting": {
+    "action": "ASK_NEXT",
+    "say_values": [],
+    "target_pending_id": null,
+    "targets": [
+     {
+      "question_id": "q_sleep",
+      "whole_question": true
+     }
+    ]
+   },
+   "notices": [],
+   "reask_reasons": [],
+   "say_values": [],
+   "sentence_materials": {
+    "choices": [],
+    "fixed_sentences": [],
+    "guide_sentences": [],
+    "question_sentences": [
+     {
+      "question_id": "q_sleep",
+      "sentence": "q_sleep 질문입니다"
+     }
+    ],
+    "reask_sentences": [],
+    "refusal_explanations": []
+   },
+   "target_pending_id": null,
+   "targets": [
+    {
+     "question_id": "q_sleep",
+     "whole_question": true
+    }
+   ]
+  },
+  "missing_required_slots": [],
+  "pendings": [],
+  "question_slots": [
+   {
+    "question_id": "q_drink",
+    "slot_ids": [
+     "status"
+    ]
+   },
+   {
+    "question_id": "q_amount",
+    "slot_ids": [
+     "amount",
+     "kind"
+    ]
+   },
+   {
+    "question_id": "q_sleep",
+    "slot_ids": [
+     "hours"
+    ]
+   },
+   {
+    "question_id": "q_visit",
+    "slot_ids": [
+     "times"
+    ]
+   },
+   {
+    "question_id": "q_pain",
+    "slot_ids": [
+     "level"
+    ]
+   },
+   {
+    "question_id": "q_note",
+    "slot_ids": [
+     "text"
+    ]
+   }
+  ],
+  "risk_phrases": [
+   "가슴이 아파"
+  ],
+  "utterance": "발화"
+ },
+ "output": {
+  "invalidated_questions": [
+   "q_amount"
+  ],
+  "judgments": [
+   {
+    "mismatched_slots": [],
+    "pending_handling": "NONE",
+    "reasons": [],
+    "risk_rule": null,
+    "said_value": "안 마시고요",
+    "status": "CORRECTION",
+    "target": {
+     "question_id": "q_drink",
+     "repeat_key": "",
+     "slot_id": "status"
+    },
+    "target_pending_ids": [],
+    "value_now": "안 마심"
+   }
+  ],
+  "utterance_judgment": {
+   "confirmation": "NONE",
+   "requests": [],
+   "result": "HAS_ANSWER",
+   "risk_signal": null,
+   "valueless_correction_requests": []
+  }
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "input": {
+  "affected_followups": [
+   {
+    "followups": [
+     "q_amount"
+    ],
+    "question_id": "q_drink"
+   }
+  ],
+  "item_checks": [
+   {
+    "item_no": 0,
+    "mismatched_slots": [],
+    "prerequisite_unmet": false,
+    "problems": [],
+    "risk_rule": null,
+    "standard_value": null,
+    "vs_current": "NOT_APPLICABLE",
+    "vs_pending": "NOT_APPLICABLE"
+   }
+  ],
+  "items": [
+   {
+    "guide_id": null,
+    "intent": "CONFIRM_YES",
+    "item_no": 0,
+    "progress_op": null,
+    "source_text": "발화",
+    "target": null,
+    "value": null
+   }
+  ],
+  "last_directive": {
+   "action": "ASK_FINISH",
+   "awaiting": {
+    "action": "ASK_FINISH",
+    "say_values": [],
+    "target_pending_id": null,
+    "targets": []
+   },
+   "notices": [],
+   "reask_reasons": [],
+   "say_values": [],
+   "sentence_materials": {
+    "choices": [],
+    "fixed_sentences": [
+     {
+      "key": "ASK_FINISH",
+      "sentence": "고정문장 ASK_FINISH"
+     }
+    ],
+    "guide_sentences": [],
+    "question_sentences": [],
+    "reask_sentences": [],
+    "refusal_explanations": []
+   },
+   "target_pending_id": null,
+   "targets": []
+  },
+  "missing_required_slots": [],
+  "pendings": [],
+  "question_slots": [
+   {
+    "question_id": "q_drink",
+    "slot_ids": [
+     "status"
+    ]
+   },
+   {
+    "question_id": "q_amount",
+    "slot_ids": [
+     "amount",
+     "kind"
+    ]
+   },
+   {
+    "question_id": "q_sleep",
+    "slot_ids": [
+     "hours"
+    ]
+   },
+   {
+    "question_id": "q_visit",
+    "slot_ids": [
+     "times"
+    ]
+   },
+   {
+    "question_id": "q_pain",
+    "slot_ids": [
+     "level"
+    ]
+   },
+   {
+    "question_id": "q_note",
+    "slot_ids": [
+     "text"
+    ]
+   }
+  ],
+  "risk_phrases": [
+   "가슴이 아파"
+  ],
+  "utterance": "발화"
+ },
+ "output": {
+  "invalidated_questions": [],
+  "judgments": [],
+  "utterance_judgment": {
+   "confirmation": "YES",
+   "requests": [],
+   "result": "HAS_ANSWER",
+   "risk_signal": null,
+   "valueless_correction_requests": []
+  }
+ }
+}

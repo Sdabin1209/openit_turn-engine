@@ -1,0 +1,169 @@
+{
+ "input": {
+  "invalidated_questions": [],
+  "judgments": [
+   {
+    "mismatched_slots": [],
+    "pending_handling": "CREATE",
+    "reasons": [],
+    "risk_rule": null,
+    "said_value": "8시간",
+    "status": "CONFLICT",
+    "target": {
+     "question_id": "q_sleep",
+     "repeat_key": "",
+     "slot_id": "hours"
+    },
+    "target_pending_ids": [],
+    "value_now": {
+     "amount": 8,
+     "unit": "시간"
+    }
+   }
+  ],
+  "question_slots": [
+   {
+    "question_id": "q_drink",
+    "slot_ids": [
+     "status"
+    ]
+   },
+   {
+    "question_id": "q_amount",
+    "slot_ids": [
+     "amount",
+     "kind"
+    ]
+   },
+   {
+    "question_id": "q_sleep",
+    "slot_ids": [
+     "hours"
+    ]
+   },
+   {
+    "question_id": "q_visit",
+    "slot_ids": [
+     "times"
+    ]
+   },
+   {
+    "question_id": "q_pain",
+    "slot_ids": [
+     "level"
+    ]
+   },
+   {
+    "question_id": "q_note",
+    "slot_ids": [
+     "text"
+    ]
+   }
+  ],
+  "target_records": [
+   {
+    "current_value": {
+     "answer": "안 마심"
+    },
+    "pending": null,
+    "slot": {
+     "question_id": "q_drink",
+     "repeat_key": "",
+     "slot_id": "status"
+    }
+   },
+   {
+    "current_value": "NONE",
+    "pending": null,
+    "slot": {
+     "question_id": "q_amount",
+     "repeat_key": "",
+     "slot_id": "amount"
+    }
+   },
+   {
+    "current_value": "NONE",
+    "pending": null,
+    "slot": {
+     "question_id": "q_amount",
+     "repeat_key": "",
+     "slot_id": "kind"
+    }
+   },
+   {
+    "current_value": {
+     "answer": {
+      "amount": 7,
+      "unit": "시간"
+     }
+    },
+    "pending": null,
+    "slot": {
+     "question_id": "q_sleep",
+     "repeat_key": "",
+     "slot_id": "hours"
+    }
+   },
+   {
+    "current_value": "NONE",
+    "pending": null,
+    "slot": {
+     "question_id": "q_visit",
+     "repeat_key": "",
+     "slot_id": "times"
+    }
+   },
+   {
+    "current_value": "NONE",
+    "pending": null,
+    "slot": {
+     "question_id": "q_pain",
+     "repeat_key": "",
+     "slot_id": "level"
+    }
+   },
+   {
+    "current_value": "NONE",
+    "pending": null,
+    "slot": {
+     "question_id": "q_note",
+     "repeat_key": "",
+     "slot_id": "text"
+    }
+   }
+  ]
+ },
+ "output": {
+  "store_decisions": [
+   {
+    "action": "SET_PENDING",
+    "pending_id": "pnd-00fc1889ffc009e6a955",
+    "risk_mark": null,
+    "slot": {
+     "question_id": "q_sleep",
+     "repeat_key": "",
+     "slot_id": "hours"
+    },
+    "value": {
+     "amount": 8,
+     "unit": "시간"
+    }
+   }
+  ],
+  "store_summary": {
+   "changed_slots": [],
+   "created_pendings": [
+    {
+     "slot": {
+      "question_id": "q_sleep",
+      "repeat_key": "",
+      "slot_id": "hours"
+     }
+    }
+   ],
+   "invalidated_questions": [],
+   "resolved_pendings": [],
+   "unknown_refused_records": []
+  }
+ }
+}
