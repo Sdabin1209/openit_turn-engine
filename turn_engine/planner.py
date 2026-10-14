@@ -121,6 +121,13 @@ class _Planner:
     def rks(self, q):
         return q["repeat_keys"] or [""]
 
+    def active_rks(self, q):
+        """반복 키가 있는 문항은 답이 있는 반복 키만 본다. 하나도 없으면 첫 반복 키(골든 V2: 선택 슬롯은 한 반복 키에 답이 있으면 닫힌다)."""
+        rks = self.rks(q)
+        qid = q["question_id"]
+        act = [rk for rk in rks if any(self.state((qid, rk, s["slot_id"])) != "NONE" for s in q["slots"])]
+        return act or rks[:1]
+
     def slot_keys(self, q):
         return [(q["question_id"], rk, s["slot_id"]) for rk in self.rks(q) for s in q["slots"]]
 
@@ -140,7 +147,7 @@ class _Planner:
             return False
         qid = q["question_id"]
         ua, ra = q["policy"]["unknown_accept_after"], q["policy"]["refusal_accept_after"]
-        for rk in self.rks(q):
+        for rk in self.active_rks(q):
             keys = [(qid, rk, s["slot_id"]) for s in q["slots"]]
             req = [(qid, rk, s["slot_id"]) for s in q["slots"] if s["required"]]
             if req:
@@ -343,14 +350,6 @@ class _Planner:
             if qid in inval or qid in changed_q:
                 self.skipped_remove.append(qid)
                 self.skipped.pop(qid)
-        # 선행 조건이 맞지 않게 된 문항도 무효화와 같이 처음 상태로 돌린다(8-2절 8, 2-7: 요약에 안 잡힌 기록 없는 문항 포함)
-        for q in self.qs:
-            qid = q["question_id"]
-            if not self.prereq_ok(q):
-                inval.add(qid)
-                if qid in self.skipped:
-                    self.skipped_remove.append(qid)
-                    self.skipped.pop(qid)
         for qid in inval:
             self.attempts.pop(qid, None)
             self.deferred = [d for d in self.deferred if not (d["kind"] == "QUESTION" and d["target"]["question_id"] == qid)]
@@ -474,7 +473,7 @@ class _Planner:
             n = self.notice("GUIDE", guide_id=g["guide_id"], question_id=qid if g["per_question"] else None,
                             question_name=self.qname(qid) if (g["per_question"] and qid) else None)
             if g["fill_value"] == "REMAINING_COUNT":
-                n["value"] = str(remaining) if remaining > 0 else "0"
+                n["value"] = {"amount": remaining, "unit": "문항"}  # 골든 E2, E5a, R11
             self.notices_early.append(n)
             self.guide_requests.append(r)
 
@@ -535,7 +534,7 @@ class _Planner:
             return None
         ev = uniq([t for r in staff for t in r["source_text"]])
         self.staff_alert = {"kind": "USER_CALLED_STAFF", "reasons": [{"kind": "USER_CALLED_STAFF", "evidence": ev}]}
-        return ("act", {"action": "CALL_STAFF"})
+        return ("act", {"action": "STAFF_NOTICE"})
 
     # (규칙 3) 이번 턴의 중단 요청 -> 중단 확인
     def rule3_prim(self):
@@ -676,7 +675,7 @@ class _Planner:
     def defer_notice(self, t):
         qid = t["question_id"] if t is not None else None
         return self.notice("DEFERRED", question_id=qid, question_name=self.qname(qid) if qid else None,
-                           slot=t if (t is not None and is_slot(t)) else None)
+                           slot=None)  # 골든(N7a, D3a): 미룸 알림에는 슬롯이 없다
 
     # (규칙 8) 확인 대기 확인에 대한 응답
     def confirm_ask(self, key, pend):
@@ -692,7 +691,7 @@ class _Planner:
             return None
         key = skey(aw["targets"][0])
         pend = self.pending(key)
-        if pend is None or key in self.cstop or self.is_deferred_pending(key):
+        if pend is None or self.is_deferred_pending(key):
             return None
         for j in self.judgments:
             if is_slot(j["target"]) and skey(j["target"]) == key and (
@@ -710,8 +709,9 @@ class _Planner:
         bad = [j for j in self.judgments if is_slot(j["target"]) and skey(j["target"]) == key and j["status"] in ("UNCLEAR", "CONFLICT")]
         if bad:
             if self.confirm_counts.get(key, 0) >= self.settings["confirm_limit"]:
-                self.cstop.append(key)
-                self.cstop_add.append(ref_of(key))
+                if key not in self.cstop:
+                    self.cstop.append(key)
+                self.cstop_add.append(ref_of(key))  # 골든 N6, C8a: 이미 중단 목록에 있어도 상한 도달은 같은 처리
                 self.ignored_judgments = self.ignored_judgments + bad
                 v = self.answer(key)
                 if v is not None:
@@ -799,7 +799,7 @@ class _Planner:
             if c["slot"]["question_id"] == qid:
                 k = skey(c["slot"])
                 sv.append(self.sv(k, "JUST_SAVED", c["new_value"], self.rec.get(k, {}).get("value_metadata")))
-        return _Ask("ASK_MISSING", targets=targets, say_values=sv, reasons=["MISSING_SLOT"])
+        return _Ask("ASK_MISSING", targets=targets, say_values=sv, reasons=[])  # 골든: 빠진 슬롯 되묻기는 되물을 이유를 비운다
 
     # (규칙 11) 모름·거절
     def rule11(self):
@@ -865,7 +865,7 @@ class _Planner:
             return None
         if self.streak == self.settings["unrecognized_streak_limit"]:
             self.staff_alert = {"kind": "CALL_STAFF", "reasons": []}
-            return ("act", {"action": "STAFF_NOTICE"})
+            return ("act", {"action": "CALL_STAFF"})
         return ("act", {"action": "ASK_REPEAT", "reasons": ["UNRECOGNIZED"]})
 
     # (규칙 15) 이번 턴에 생긴 확인 대기
@@ -914,14 +914,14 @@ class _Planner:
             return None
         q = opens[0]
         qid = q["question_id"]
-        for rk in self.rks(q):
+        for rk in self.active_rks(q):
             keys = [(qid, rk, s["slot_id"]) for s in q["slots"]]
             req = [k for k, s in zip(keys, q["slots"]) if s["required"]]
             empty = [k for k in (req if req else keys) if self.state(k) == "NONE"]
             has_ans = [k for k in keys if self.state(k) != "NONE"]
             if empty and has_ans:
                 return _Ask("ASK_MISSING", targets=[ref_of(k) for k in empty], say_values=self.answers_sv(q),
-                            reasons=["MISSING_SLOT"])
+                            reasons=[])  # 골든: 빠진 슬롯 되묻기는 되물을 이유를 비운다
             if empty:
                 return _Ask("ASK_NEXT", targets=[_whole(qid)])
             ua, ra = q["policy"]["unknown_accept_after"], q["policy"]["refusal_accept_after"]
@@ -963,22 +963,19 @@ class _Planner:
     def rule19(self):
         sk = ("U", "ASK_FINISH")
         n = self.ask_counts.get(sk, [None, 0])[1]
-        lim = self.settings["ask_limit"]
-        if n < lim:
+        if n < self.settings["ask_limit"]:
             return _Ask("ASK_FINISH", commit=lambda: self.bump({"untargeted": "ASK_FINISH"}, 1))
-        if n == lim:
-            self.staff_alert = {"kind": "CALL_STAFF", "reasons": []}
-            self.bump({"untargeted": "ASK_FINISH"}, 1)
-            return _Ask("STAFF_NOTICE_FINISH")
-        return _Ask("ASK_FINISH")
+        # 물음 상한: 도움 요청 + 직원 알림. 기다리는 답은 없다(골든 H5b); 직원의 개입 결정이 끝이다
+        self.staff_alert = {"kind": "CALL_STAFF", "reasons": []}
+        return _Ask("STAFF_NOTICE_FINISH")
 
     # =============== 마무리 ===============
     def finish(self, primary, awaiting, stop_now):
         # 규칙 19의 도움 요청은 묻는 행동이 아니라 행동 STAFF_NOTICE다(알림은 이미 정했다)
         if awaiting is not None and awaiting.action == "STAFF_NOTICE_FINISH":
-            awaiting = _Ask("ASK_FINISH")
+            awaiting = None
             if primary is None or primary[0] in ("ask", "follow"):
-                primary = ("act", {"action": "STAFF_NOTICE"})
+                primary = ("act", {"action": "CALL_STAFF"})
         if primary is None:
             primary = ("follow", None)
         return self.build(primary, awaiting)
@@ -988,6 +985,8 @@ class _Planner:
         if typ == "end":
             return self.out(self.mkdirective(data["action"], [], None, None, [], []))
         if typ == "act":
+            if awaiting is not None and awaiting.commit:  # 골든(G8b, H3d, H5a, R7): 행동 뒤에 이어 묻는 것도 센다
+                awaiting.commit()
             d = self.mkdirective(data["action"], [], None, awaiting, [], data.get("reasons", []))
             return self.out(d)
         if typ == "ask":
@@ -998,7 +997,7 @@ class _Planner:
             return self.out(d)
         if typ == "follow":
             a = awaiting
-            if a is not None and a.commit and self.kind == "UTTERANCE":
+            if a is not None and a.commit:  # 골든(H3d, H3e): 재개·세션 시작 뒤 이어 묻는 것도 센다
                 a.commit()
             if a is None:
                 d = self.mkdirective("ASK_FINISH", [], None, None, [], [])
@@ -1026,36 +1025,37 @@ class _Planner:
         d["sentence_materials"] = self.materials(action, aw_dir, notices, targets)
         return d
 
-    # ---------- 문장 재료 (change-requests/CR-005: 선택 규칙이 문서에 없어 해석 구현) ----------
+    # ---------- 문장 재료 (골든 209 케이스의 모양에 맞춘 해석; change-requests/CR-005 결정 절) ----------
+    def ask_materials(self, m, act, tg):
+        """묻는 행동 하나의 재료: 다음 문항 묻기·모름 뒤 재질문=문항 문장+선택지, 거절 시 설명 후 재질문=문항 문장+거절 설명+선택지,
+        빠진 슬롯 되묻기·구체화 요청=대상 슬롯의 다시 묻기 문장+선택지."""
+        if act not in ASK_Q_ACTIONS:
+            return
+        seen_q = {x["question_id"] for x in m["question_sentences"]}
+        for t in tg:
+            qid = t["question_id"]
+            q = self.qmap.get(qid)
+            if q is None:
+                continue
+            if act in ("ASK_NEXT", "ASK_AFTER_UNKNOWN", "ASK_AFTER_REFUSAL") and qid not in seen_q:
+                seen_q.add(qid)
+                m["question_sentences"].append({"question_id": qid, "sentence": q["question_sentence"]})
+                if act == "ASK_AFTER_REFUSAL":
+                    m["refusal_explanations"].append({"question_id": qid, "sentence": q["refusal_explanation"]})
+            for s in [s for s in q["slots"] if is_whole(t) or s["slot_id"] == t["slot_id"]]:
+                ref = ref_of((qid, "" if is_whole(t) else t["repeat_key"], s["slot_id"]))
+                if act in ("ASK_MISSING", "ASK_CLARIFY") and not any(x["slot"] == ref for x in m["reask_sentences"]):
+                    m["reask_sentences"].append({"slot": ref, "sentence": s["reask_sentence"]})
+                names = [c["label"] for c in s.get("choice_catalog", [])] or list(s["choices"])
+                if names and not any(x["slot"] == ref for x in m["choices"]):
+                    m["choices"].append({"slot": ref, "choices": names})
+
     def materials(self, action, aw, notices, targets):
         m = {"question_sentences": [], "refusal_explanations": [], "reask_sentences": [], "choices": [],
              "guide_sentences": [], "fixed_sentences": []}
-        asks = [(action, targets)]
-        if aw:
-            asks.append((aw["action"], aw["targets"]))
-        seen_q = set()
-        for act, tg in asks:
-            if act not in ASK_Q_ACTIONS:
-                continue
-            for t in tg:
-                qid = t["question_id"]
-                q = self.qmap.get(qid)
-                if q is None:
-                    continue
-                if qid not in seen_q:
-                    seen_q.add(qid)
-                    m["question_sentences"].append({"question_id": qid, "sentence": q["question_sentence"]})
-                    if act == "ASK_AFTER_REFUSAL":
-                        m["refusal_explanations"].append({"question_id": qid, "sentence": q["refusal_explanation"]})
-                slots = [s for s in q["slots"] if is_whole(t) or s["slot_id"] == t["slot_id"]]
-                for s in slots:
-                    rk = "" if is_whole(t) else t["repeat_key"]
-                    ref = ref_of((qid, rk, s["slot_id"]))
-                    if act != "ASK_NEXT" and not any(x["slot"] == ref for x in m["reask_sentences"]):
-                        m["reask_sentences"].append({"slot": ref, "sentence": s["reask_sentence"]})
-                    names = [c["label"] for c in s.get("choice_catalog", [])] or list(s["choices"])
-                    if names and not any(x["slot"] == ref for x in m["choices"]):
-                        m["choices"].append({"slot": ref, "choices": names})
+        self.ask_materials(m, action, targets)
+        if action in ("REDIRECT", "ASK_REPEAT") and aw:  # 다시 묻는 행동은 기다리는 답의 재료도 담는다
+            self.ask_materials(m, aw["action"], aw["targets"])
         for n in notices:
             if n["kind"] != "GUIDE":
                 continue
@@ -1070,7 +1070,7 @@ class _Planner:
             elif g["sentence"]:
                 m["guide_sentences"].append({"guide_id": g["guide_id"], "question_id": None, "sentence": g["sentence"]})
         keys = []
-        for a in [action] + ([aw["action"]] if aw else []):
+        for a in [action]:
             if a in FIXED_KEY_OF_ACTION:
                 keys.append(FIXED_KEY_OF_ACTION[a])
         for n in notices:

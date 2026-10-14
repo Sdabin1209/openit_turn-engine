@@ -72,8 +72,11 @@ class _Writer:
         judged = {skey(j["target"]) for j in self.inp["judgments"] if not is_whole(j["target"])}
         for j in self.inp["judgments"]:
             if is_whole(j["target"]):
+                drops = []  # 골든(R13, N17): 문항 전체는 슬롯별 기록을 낸 뒤 확인 대기 버림을 모아 뒤에 둔다
                 for slot in self.slots_of_question(j["target"]["question_id"], judged):
-                    self.apply(j, slot)
+                    self.apply(j, slot, drops)
+                for slot, pid in drops:
+                    self.drop(slot, pid)
             else:
                 self.apply(j, j["target"])
         return {"store_decisions": self.decisions, "store_summary": self.summary}
@@ -81,17 +84,17 @@ class _Writer:
     def invalidations(self):
         for qid in self.inp["invalidated_questions"]:
             did = False
-            for r in self.inp["target_records"]:
-                s = r["slot"]
-                if s["question_id"] != qid:
-                    continue
+            recs = [r for r in self.inp["target_records"] if r["slot"]["question_id"] == qid]
+            order = {sid: n for n, sid in enumerate(self.qslots.get(qid, []))}
+            recs.sort(key=lambda r: order.get(r["slot"]["slot_id"], 10 ** 6))  # 골든(S6c): 문항 슬롯 순서
+            for r in recs:
                 if r["current_value"] != "NONE" or r["pending"] is not None:
-                    self.decide(s, "INVALIDATE", pending_id=r["pending"]["pending_id"] if r["pending"] else None)
+                    self.decide(r["slot"], "INVALIDATE")
                     did = True
             if did:
                 self.summary["invalidated_questions"].append(qid)
 
-    def apply(self, j, slot):
+    def apply(self, j, slot, drops=None):
         status = j["status"]
         handling = j["pending_handling"]
         cur = self.cur(slot)
@@ -108,10 +111,8 @@ class _Writer:
             return
         if status == "ANSWERED":
             if not isinstance(cur, dict):
-                if cur == "NONE":
-                    self.write(slot, "FIRST_WRITE", None, value, j)
-                else:
-                    self.write(slot, "NEW_REVISION", None, value, j)
+                # 골든(S8d, X7): 모름·거절 기록 뒤의 답도 첫 저장
+                self.write(slot, "FIRST_WRITE", None, value, j)
             # 같은 값이면 저장 없음(확인 대기 버림만)
         elif status == "CORRECTION":
             if handling == "ACCEPT" and pend is not None:
@@ -134,7 +135,11 @@ class _Writer:
         else:
             return  # 애매·누락·선행 불충족은 저장하지 않는다
         if handling == "DROP" and pid:
-            self.drop(slot, pid)
+            if drops is not None:
+                if pend is not None:  # 문항 전체 판정: 확인 대기가 있는 슬롯만
+                    drops.append((slot, pend["pending_id"]))
+            else:
+                self.drop(slot, pid)
 
     def write(self, slot, action, previous, value, j):
         self.decide(slot, action, value, None, j["risk_rule"], j.get("value_metadata"))

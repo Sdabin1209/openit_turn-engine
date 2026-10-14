@@ -558,7 +558,10 @@
      "question_id": null,
      "question_name": null,
      "slot": null,
-     "value": "5"
+     "value": {
+      "amount": 5,
+      "unit": "문항"
+     }
     }
    ],
    "reask_reasons": [],
@@ -635,7 +638,10 @@
       "question_id": null,
       "question_name": null,
       "slot": null,
-      "value": "5"
+      "value": {
+       "amount": 5,
+       "unit": "문항"
+      }
      }
     ],
     "reask_reasons": [],

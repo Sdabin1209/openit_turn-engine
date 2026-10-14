@@ -129,7 +129,7 @@
     "pending_handling": "NONE",
     "reasons": [],
     "risk_rule": null,
-    "said_value": "일곱이요",
+    "said_value": null,
     "status": "ANSWERED",
     "target": {
      "question_id": "q_sleep",

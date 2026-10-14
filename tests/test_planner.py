@@ -153,7 +153,7 @@ def test_r1_on_result_risk_does_not_pause():
 def test_r2_staff_request():
     s = started()
     out = s.turn([item(0, None, None, "USER_CALLED_STAFF", text="직원 불러주세요")])
-    assert out["directive"]["action"] == "CALL_STAFF" and out["progress_record_update"]["session_status"] is None
+    assert out["directive"]["action"] == "STAFF_NOTICE" and out["progress_record_update"]["session_status"] is None  # 골든 F1
     assert out["staff_alert"] == {"kind": "USER_CALLED_STAFF", "reasons": [{"kind": "USER_CALLED_STAFF", "evidence": ["직원 불러주세요"]}]}
     assert out["directive"]["awaiting"]["action"] == "ASK_NEXT"
 
@@ -182,10 +182,10 @@ def test_r3_stop_fact_survives_interjection_and_is_asked_again_by_ask_chain():
 
 def test_r3_stop_limit_turns_request_off():
     s = started()
-    s.turn([say("STOP")])
-    s.turn([say("WAIT")]); s.turn([say("STOP")])  # 두 번째 중단 확인
+    s.turn([say("STOP")])                      # 중단 확인 1번째(골든: 이어 묻는 것도 센다)
+    s.turn([say("WAIT")])                      # 대기 안내 뒤 기다리는 답이 중단 확인: 2번째
     assert s.open["stop_requested"]
-    out = s.turn([say("WAIT")])  # 물은 횟수가 상한(2)
+    out = s.turn([say("WAIT")])                # 물은 횟수가 상한(2): 중단 요청을 아니요로
     assert not s.open["stop_requested"] and out["directive"]["awaiting"]["action"] == "ASK_NEXT"
     assert not any("ASK_STOP" in str(c) for c in s.pr["ask_counts"])
 
@@ -359,7 +359,7 @@ def test_r10_missing_slot_is_reasked_with_just_saved_value():
     s.turn([ans(s, DR, "마시고요")])
     out = s.turn([ans(s, AM, "두 병")])
     d = out["directive"]
-    assert d["action"] == "ASK_MISSING" and tg(d) == ["kind"] and d["reask_reasons"] == ["MISSING_SLOT"]
+    assert d["action"] == "ASK_MISSING" and tg(d) == ["kind"] and d["reask_reasons"] == []  # 골든 B2
     assert [(v["role"], v["value"]) for v in d["say_values"]] == [("JUST_SAVED", {"amount": 2, "unit": "병"})]
 
 
@@ -597,13 +597,13 @@ def test_r12_remaining_count_fill_value():
     s = started()
     out = s.turn([item(0, None, None, "GUIDE_REQUEST", guide="g_left")])
     n = out["directive"]["notices"][0]
-    assert n["guide_id"] == "g_left" and n["value"] == "5"
+    assert n["guide_id"] == "g_left" and n["value"] == {"amount": 5, "unit": "문항"}
 
 
 def test_r12_guide_values_computed_after_this_turns_writes():
     s = started()
     out = s.turn([ans(s, DR, "안 마시고요"), item(1, None, None, "GUIDE_REQUEST", guide="g_left")])
-    assert out["directive"]["notices"][0]["value"] == "4"  # 음주량 문항은 선행 불충족이라 세지 않는다
+    assert out["directive"]["notices"][0]["value"] == {"amount": 4, "unit": "문항"}  # 음주량 문항은 선행 불충족이라 세지 않는다
 
 
 def test_r12_guide_with_later_keeps_notice_and_defers_question():
@@ -634,7 +634,7 @@ def test_r14_unrecognized_asks_again_then_staff_once():
     assert out["directive"]["action"] == "ASK_REPEAT" and out["directive"]["reask_reasons"] == ["UNRECOGNIZED"]
     assert out["staff_alert"] is None and s.pr["unrecognized_streak"] == 1
     out = s.turn([item(0, None, None, "UNRECOGNIZED")])
-    assert out["directive"]["action"] == "STAFF_NOTICE" and out["staff_alert"] == {"kind": "CALL_STAFF", "reasons": []}
+    assert out["directive"]["action"] == "CALL_STAFF" and out["staff_alert"] == {"kind": "CALL_STAFF", "reasons": []}  # 골든 F3
     out = s.turn([item(0, None, None, "UNRECOGNIZED")])
     assert out["directive"]["action"] == "ASK_REPEAT" and out["staff_alert"] is None
 
@@ -699,10 +699,9 @@ def test_r19_finish_question_and_help_after_ask_limit():
     s.turn([item(0, None, None, "CONFIRM_NO")])  # 거부: 종료 확인 기다리는 중의 아니요는 사실을 바꾸지 않음
     assert s.action() == "ASK_FINISH"
     out = s.turn([item(0, None, None, "CONFIRM_NO")])
-    assert out["directive"]["action"] == "STAFF_NOTICE" and out["staff_alert"] == {"kind": "CALL_STAFF", "reasons": []}
-    assert out["directive"]["awaiting"]["action"] == "ASK_FINISH"
-    out = s.turn([item(0, None, None, "CONFIRM_NO")])
-    assert out["staff_alert"] is None and out["directive"]["action"] == "ASK_FINISH"
+    assert out["directive"]["action"] == "CALL_STAFF" and out["staff_alert"] == {"kind": "CALL_STAFF", "reasons": []}
+    assert out["directive"]["awaiting"] is None  # 골든 H5b: 기다리는 답 없음, 끝은 직원의 개입 결정
+    assert s.pr["ask_counts"] == [{"subject": {"untargeted": "ASK_FINISH"}, "count": 2}]
 
 
 # ----- 8-2: 판단에 쓰는 값 -----
@@ -736,10 +735,10 @@ def test_82_attempt_counts_only_unusable_turns():
 
 def test_82_attempts_cleared_for_invalidated_question():
     s = started()
-    s.turn([ans(s, DR, "마시고요")])
-    s.turn([ans(s, AM, "많이"), ])
-    assert {"question_id": AMOUNT, "count": 1} in s.pr["attempt_counts"]
-    s.turn([ans(s, DR, "안 마시고요", "CORRECTION_MARKED")])
+    s.turn([ans(s, DR, "마시고요"), ans(s, AM, "두 병", n=1)])
+    s.turn([ans(s, AK, "많이")])  # 애매: 음주량 문항 시도 1
+    assert any(c["question_id"] == AMOUNT for c in s.pr["attempt_counts"])
+    s.turn([ans(s, DR, "안 마시고요", "CORRECTION_MARKED")])  # 기록이 있던 후속 문항이 무효화된다
     assert all(c["question_id"] != AMOUNT for c in s.pr["attempt_counts"])
 
 
@@ -842,7 +841,7 @@ def test_84_user_who_keeps_refusing_finish_gets_staff_help():
     answered_all(s)
     for _ in range(4):
         s.turn([item(0, None, None, "CONFIRM_NO")])
-    assert [a["kind"] for a in s.alerts].count("CALL_STAFF") == 1
+    assert [a["kind"] for a in s.alerts].count("CALL_STAFF") >= 1 and s.flow == "CONTINUE"
 
 
 def test_84_correction_possible_from_any_state():

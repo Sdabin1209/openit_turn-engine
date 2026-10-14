@@ -74,11 +74,8 @@ class _Normalizer:
         squashed = _text.squash(text)
         matched = []
         for i, u in enumerate(units):
-            for n in [u["name"], *u["synonyms"]]:
-                core = _text.strip_number_place(n)
-                if core and core in squashed:
-                    matched.append(i)
-                    break
+            if any(_text.unit_name_matches(n, squashed) for n in [u["name"], *u["synonyms"]]):
+                matched.append(i)
         if len(matched) > 1:
             return None, ["AMBIGUOUS"], False
         if matched:
@@ -290,6 +287,8 @@ class _Normalizer:
                         and not self._is_negative(t, b["std"]))
             if is_value:
                 b["problems"].append("MISMATCH")
+                b["std"] = None  # 골든(S2b, S6a, B4): 문제가 있어 표준화하지 못한 항목은 표준 값 없음
+                b["approx"] = False
                 cond_slot = q["prerequisite"]["slot"]
                 b["mismatched"] = [cond_slot]
                 if from_utt:
@@ -300,10 +299,15 @@ class _Normalizer:
                             b2 = self.base[j]
                             if "MISMATCH" not in b2["problems"]:
                                 b2["problems"].append("MISMATCH")
+                            b2["flag_std_clear"] = True
                             if not any(skey(r) == skey(t) for r in b2["mismatched"]):
                                 b2["mismatched"].append(ref_of(skey(t)))
             else:
                 b["unmet"] = True
+
+        for b in self.base.values():
+            if b.pop("flag_std_clear", False):
+                b["std"], b["approx"] = None, False
 
     def _is_negative(self, t, std) -> bool:
         d = self.slotdef[(t["question_id"], t["slot_id"])]

@@ -145,12 +145,13 @@ class _Judge:
             status = "CONFLICT"
         if pend is not None and handling == "NONE":
             if status == "CONFLICT":
-                handling, ids = "CREATE", [pend["pending_id"]]  # 있던 것은 대체
+                handling, ids = "CREATE", []  # 있던 것의 대체는 저장 판단이 기록에서 안다(골든 N6)
             else:
                 handling, ids = "DROP", [pend["pending_id"]]
         elif status == "CONFLICT":
             handling = "CREATE"
-        j = self.base_judgment(group[0]["target"], status, value_now=std, said_value=saids[0] if len(saids) == 1 else " / ".join(saids),
+        j = self.base_judgment(group[0]["target"], status, value_now=std,  # 골든: 말한 값은 구체화 요청(애매)에서만
+                               said_value=None,
                                pending_handling=handling, target_pending_ids=ids, risk_rule=c0["risk_rule"])
         if c0.get("value_metadata"):
             j["value_metadata"] = c0["value_metadata"]
@@ -168,6 +169,11 @@ class _Judge:
     def run(self) -> dict:
         cat = self.classify()
         judgments = []
+        order_of = {}  # id(판정) -> 정렬 키. 골든: 판정은 발화 항목의 순서(처음 나온 항목)를 따르고 누락은 맨 뒤
+        first_item = {}
+        for pos, it in enumerate(self.items):
+            if it["target"] is not None:
+                first_item.setdefault(tkey(it["target"]), pos)
         slot_keys_with_judgment = set()  # ("S", q, rk, slot)
 
         # 슬롯별 값 / 모름·거절 / 선행 불충족
@@ -197,6 +203,8 @@ class _Judge:
                 judgments.append(self.uk_judgment(target, k, live_uk))
             elif unmet:
                 judgments.append(self.base_judgment(target, "PREREQUISITE_UNMET"))
+            if judgments:
+                order_of.setdefault(id(judgments[-1]), min(self.items.index(i) for i in all_items))
             if judgments and judgments[-1]["target"] == target and k[0] == "S":
                 slot_keys_with_judgment.add(k)
 
@@ -224,6 +232,7 @@ class _Judge:
             status = "UNKNOWN" if grp[-1]["intent"] == "SAYS_UNKNOWN" else "REJECTED"
             judgments.append(self.base_judgment(grp[0]["target"], status,
                                                 pending_handling="DROP" if ids else "NONE", target_pending_ids=ids))
+            order_of[id(judgments[-1])] = min(self.items.index(i) for i in grp)
 
         # 확인 응답
         confirmation = "NONE"
@@ -235,12 +244,16 @@ class _Judge:
             oos_extra += confirms  # 규칙 4: 둘 다 무관과 같이
         elif confirms:
             if self.aw_action == "ASK_CONFIRM":
-                judgments += self.confirm_judgments(confirms, slot_keys_with_judgment, covered_slots, oos_extra)
+                cj = self.confirm_judgments(confirms, slot_keys_with_judgment, covered_slots, oos_extra)
+                for j in cj:
+                    order_of[id(j)] = min(self.items.index(i) for i in confirms)
+                judgments += cj
             elif self.aw_action in ("ASK_CORRECTION_TARGET", "ASK_FINISH", "ASK_STOP"):
                 confirmation = "YES" if yes else "NO"
             else:
                 oos_extra += confirms
 
+        judgments.sort(key=lambda j: order_of.get(id(j), 10 ** 6))  # 안정 정렬: 누락은 뒤, 같은 위치는 만든 순서
         # 값 없는 정정 요청
         valueless = []
         value_slot_keys = {tkey(j["target"]) for j in judgments
@@ -254,9 +267,16 @@ class _Judge:
                 valueless.append(entry)
 
         requests = self.requests(cat["request"])
+        # 위험 표현 안전망(CR-003 결정): 발화에 목록의 표현이 있으면(공백 제외 부분 문자열) 모델이 놓쳐도 위험 신호.
+        # 근거에는 맞은 표현 자체를 담아 발화 원문이 새지 않게 한다.
+        squashed = "".join(self.inp["utterance"].split())
+        matched = [ph for ph in self.inp["risk_phrases"] if "".join(ph.split()) and "".join(ph.split()) in squashed]
         risk = None
-        if cat["risk"]:
-            risk = {"evidence": uniq([it["source_text"] for it in cat["risk"]])}
+        if cat["risk"] or matched:
+            texts = [it["source_text"] for it in cat["risk"]]
+            sq = ["".join(t.split()) for t in texts]
+            extra = [ph for ph in matched if not any("".join(ph.split()) in x for x in sq)]  # 이미 근거에 든 표현은 중복 없이
+            risk = {"evidence": uniq(texts + extra)}
 
         # 무효화 대상 문항 (규칙 6)
         inval = []
@@ -266,9 +286,9 @@ class _Judge:
         invalidated = uniq(inval)
 
         # 발화 전체 결과
-        if judgments or confirmation != "NONE":
+        if judgments or confirmation != "NONE" or valueless or risk:  # 골든(C5, G1): 값 없는 정정·위험 신호는 응답 있음
             result = "HAS_ANSWER"
-        elif requests or valueless or risk:
+        elif requests:
             result = "REQUEST_ONLY"
         elif cat["oos"] or oos_extra:
             result = "OUT_OF_SCOPE_ONLY"

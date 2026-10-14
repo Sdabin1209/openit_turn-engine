@@ -9,7 +9,7 @@ from .normalizer import normalize
 from .planner import plan
 from .writer import write_record
 
-ENGINE_VERSION = "0.1.0"
+ENGINE_VERSION = "0.2.0"
 
 __all__ = [
     "normalize", "judge", "write_record", "plan",

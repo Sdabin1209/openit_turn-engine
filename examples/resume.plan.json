@@ -98,19 +98,7 @@
    "reask_reasons": [],
    "say_values": [],
    "sentence_materials": {
-    "choices": [
-     {
-      "choices": [
-       "마심",
-       "안 마심"
-      ],
-      "slot": {
-       "question_id": "q_drink",
-       "repeat_key": "",
-       "slot_id": "status"
-      }
-     }
-    ],
+    "choices": [],
     "fixed_sentences": [
      {
       "key": "RISK_NOTICE",
@@ -118,12 +106,7 @@
      }
     ],
     "guide_sentences": [],
-    "question_sentences": [
-     {
-      "question_id": "q_drink",
-      "sentence": "q_drink 질문입니다"
-     }
-    ],
+    "question_sentences": [],
     "reask_sentences": [],
     "refusal_explanations": []
    },

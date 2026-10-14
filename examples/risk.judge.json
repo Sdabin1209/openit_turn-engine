@@ -132,7 +132,7 @@
   "utterance_judgment": {
    "confirmation": "NONE",
    "requests": [],
-   "result": "REQUEST_ONLY",
+   "result": "HAS_ANSWER",
    "risk_signal": {
     "evidence": [
      "가슴이 너무 아파요"

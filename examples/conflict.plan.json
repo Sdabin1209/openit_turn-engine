@@ -107,7 +107,7 @@
     "pending_handling": "CREATE",
     "reasons": [],
     "risk_rule": null,
-    "said_value": "8시간",
+    "said_value": null,
     "status": "CONFLICT",
     "target": {
      "question_id": "q_sleep",

@@ -1,0 +1,250 @@
+{
+ "A2/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "B4/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "B9/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "C11/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "C2/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "C3/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "D3c/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "G10/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "G10/t2/AnswerJudgeInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "G10/t2/RecordWriterInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "H3e/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "H3e/t2/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "J7d/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "K1/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "K2/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "K4/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "K4/t1/DialoguePlannerInput": [
+  "b",
+  "무관한 말이 답과 함께 왔을 때 고정 문장(OOS_NOTICE)을 재료에 더한다. 플래너 입력에는 무관 항목이 있었다는 정보가 없어 도출할 수 없다(CR-005)"
+ ],
+ "K5/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "K7/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "K9a/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "K9b/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "K9c/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "N13/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "N13/t2/AnswerJudgeInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "N13/t2/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "N13/t2/RecordWriterInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "N15/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "N16/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "N1a/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "N2a/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "N2b/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "N9/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "R13/t1/RecordWriterInput": [
+  "c",
+  "모름 기록(RECORD_UNKNOWN)에 대기 ID X가 붙어 있다(기록 결정은 대기 ID를 갖지 않는다)"
+ ],
+ "R5/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "R7/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "S1a/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S1b/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S1d/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "S1e/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "S2d/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S2e/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S2e/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "S2e/t2/AnswerJudgeInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "S2e/t2/RecordWriterInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "S4a/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "S4d/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S5a/t2/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S6a/t1/AnswerJudgeInput": [
+  "c",
+  "확인 판정에 같은 턴 다른 판정의 사유(MISMATCH)·말한 값이 복사돼 있고, 다른 판정에 확인 대기 받아들임이 복사돼 있다"
+ ],
+ "S6b/t1/AnswerJudgeInput": [
+  "c",
+  "다른 슬롯의 선행 불충족 판정에 확인 대기 받아들임(대기 ID X)이 복사돼 있다"
+ ],
+ "S6b/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S6c/t1/AnswerJudgeInput": [
+  "b",
+  "판정 순서: 이 예시는 확인 항목(선행 불충족)을 정정 판정 뒤에 둔다. S6b·S8b·S6a는 확인 항목이 앞이다. 항목 순서를 따르는 구현과 다르다(CR-008)"
+ ],
+ "S6c/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S7c/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S8a/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S8b/t1/AnswerJudgeInput": [
+  "c",
+  "값 판정(ANSWERED)에 다른 슬롯의 확인 대기 받아들임(대기 ID X)이 복사돼 있다"
+ ],
+ "S8b/t1/RecordWriterInput": [
+  "c",
+  "첫 저장(FIRST_WRITE)에 다른 슬롯의 대기 ID X가 붙어 있고, 결정 순서가 판정 순서와 다르다(받아들임이 앞)"
+ ],
+ "S8c/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "S8c/t1/DialoguePlannerInput": [
+  "c",
+  "확인 대기 ID 자리표시자가 예시 입력의 ID와 다르다(입력 N1, 출력 X 등; 예시 안의 모순)"
+ ],
+ "S8f/t1/AnswerNormalizerInput": [
+  "b",
+  "어휘: 규칙 5절 규칙 8 범위 밖의 말 이음(불규칙 활용 '피워요'↔'피움', 단독 '네'·'안 해요'→예·아니요). 선택지에 동의어가 없는 평문 선택지다(CR-001)"
+ ],
+ "V3/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ],
+ "X2/t1/RecordWriterInput": [
+  "c",
+  "모름 기록(RECORD_UNKNOWN)에 대기 ID X가 붙어 있다(기록 결정은 대기 ID를 갖지 않는다)"
+ ],
+ "X6/t1/DialoguePlannerInput": [
+  "c",
+  "고정 문장 본문이 이 예시 입력의 session_settings.fixed_sentences와 다르다(예시 안의 모순)"
+ ]
+}

@@ -23,9 +23,9 @@
      "MISMATCH"
     ],
     "risk_rule": null,
-    "standard_value": "안 마심",
-    "vs_current": "DIFFERENT",
-    "vs_pending": "NO_PENDING"
+    "standard_value": null,
+    "vs_current": "NOT_APPLICABLE",
+    "vs_pending": "NOT_APPLICABLE"
    },
    {
     "item_no": 1,
@@ -41,9 +41,9 @@
      "MISMATCH"
     ],
     "risk_rule": null,
-    "standard_value": "소주",
-    "vs_current": "NO_CURRENT",
-    "vs_pending": "NO_PENDING"
+    "standard_value": null,
+    "vs_current": "NOT_APPLICABLE",
+    "vs_pending": "NOT_APPLICABLE"
    }
   ],
   "items": [

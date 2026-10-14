@@ -98,7 +98,7 @@
     "pending_handling": "NONE",
     "reasons": [],
     "risk_rule": null,
-    "said_value": "안 마시고요",
+    "said_value": null,
     "status": "CORRECTION",
     "target": {
      "question_id": "q_drink",

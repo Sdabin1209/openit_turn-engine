@@ -571,16 +571,7 @@
       "sentence": "q_sleep 질문입니다"
      }
     ],
-    "reask_sentences": [
-     {
-      "sentence": "hours를 다시 말씀해 주세요",
-      "slot": {
-       "question_id": "q_sleep",
-       "repeat_key": "",
-       "slot_id": "hours"
-      }
-     }
-    ],
+    "reask_sentences": [],
     "refusal_explanations": []
    },
    "target_pending_id": null,
@@ -636,16 +627,7 @@
        "sentence": "q_sleep 질문입니다"
       }
      ],
-     "reask_sentences": [
-      {
-       "sentence": "hours를 다시 말씀해 주세요",
-       "slot": {
-        "question_id": "q_sleep",
-        "repeat_key": "",
-        "slot_id": "hours"
-       }
-      }
-     ],
+     "reask_sentences": [],
      "refusal_explanations": []
     },
     "target_pending_id": null,

@@ -122,7 +122,7 @@ def test_j2_correction_unknown_refusal_drop_pending():
 
 def test_j2_third_value_replaces_pending():
     j = jd(run([item(0, SL, "9시간")], currents=[cur(SL, H7)], pendings=[pending(SL, H8)]))
-    assert j["status"] == "CONFLICT" and j["pending_handling"] == "CREATE" and j["target_pending_ids"] == ["p1"]
+    assert j["status"] == "CONFLICT" and j["pending_handling"] == "CREATE" and j["target_pending_ids"] == []  # 골든 N6
 
 
 def test_j2_unclear_with_pending_has_no_handling():
@@ -245,7 +245,7 @@ def test_valueless_correction_is_a_request():
     out = run([item(0, SL, None, "CORRECTION_MARKED")])
     u = out["utterance_judgment"]
     assert out["judgments"] == [] and u["valueless_correction_requests"] == [{"target": SL}]
-    assert u["result"] == "REQUEST_ONLY"
+    assert u["result"] == "HAS_ANSWER"  # 골든 C5
     out = run([item(0, None, None, "CORRECTION_MARKED")])
     assert out["utterance_judgment"]["valueless_correction_requests"] == [{"target": None}]
 
@@ -264,7 +264,7 @@ def test_j3_valueless_correction_dropped_when_slot_has_value_judgment():
 def test_risk_signal_result_and_evidence():
     out = run([item(0, None, None, "RISK_SIGNAL", text="숨이 안 쉬어져요")])
     u = out["utterance_judgment"]
-    assert u["risk_signal"] == {"evidence": ["숨이 안 쉬어져요"]} and u["result"] == "REQUEST_ONLY"
+    assert u["risk_signal"] == {"evidence": ["숨이 안 쉬어져요"]} and u["result"] == "HAS_ANSWER"  # 골든 G1
 
 
 def test_result_classification():
@@ -376,3 +376,50 @@ def test_schema_violation():
     inp["utterance"] = 3
     with pytest.raises(ContractViolation):
         judge(inp)
+
+
+# ----- 위험 표현 안전망 (CR-003 결정; 골든 G2, G9, S3c) -----
+def risk_run(items, utterance, phrases=("숨이 안", "죽고 싶", "가슴이 너무 아파")):
+    n = normalize(normalizer_input(items))
+    inp = judge_input(items, n["item_checks"], utterance=utterance)
+    inp["risk_phrases"] = list(phrases)
+    return judge(inp)
+
+
+def test_risk_phrase_catches_what_the_model_missed_with_phrase_as_evidence():
+    out = risk_run([item(0, None, None, "OUT_OF_SCOPE", text="예전에 숨이 안 쉬어진 적 있어요")], "예전에 숨이 안 쉬어진 적 있어요")
+    u = out["utterance_judgment"]
+    assert u["risk_signal"] == {"evidence": ["숨이 안"]} and u["result"] == "HAS_ANSWER"
+
+
+def test_risk_phrase_works_when_parser_said_refusal():
+    out = risk_run([item(0, SL, None, "SAYS_REFUSAL", text="죽고 싶어요")], "그냥 죽고 싶어요")
+    assert out["utterance_judgment"]["risk_signal"] == {"evidence": ["죽고 싶"]}
+    assert out["judgments"][0]["status"] == "REJECTED"  # 다른 판정은 그대로
+
+
+def test_risk_phrase_ignores_spaces_and_does_not_leak_utterance():
+    out = risk_run([], "숨이안 쉬어져요 제 이름은 홍길동")
+    assert out["utterance_judgment"]["risk_signal"] == {"evidence": ["숨이 안"]}
+    assert "홍길동" not in str(out)
+
+
+def test_risk_phrase_merges_with_model_signal_without_duplicates():
+    out = risk_run([item(0, None, None, "RISK_SIGNAL", text="숨이 안 쉬어져요")], "숨이 안 쉬어져요")
+    assert out["utterance_judgment"]["risk_signal"] == {"evidence": ["숨이 안 쉬어져요"]}
+    out = risk_run([item(0, None, None, "RISK_SIGNAL", text="쓰러질 것 같아요")], "쓰러질 것 같아요 가슴이 너무 아파요")
+    assert out["utterance_judgment"]["risk_signal"] == {"evidence": ["쓰러질 것 같아요", "가슴이 너무 아파"]}
+
+
+def test_no_risk_phrase_no_signal_and_empty_list_is_fine():
+    assert risk_run([], "괜찮아요")["utterance_judgment"]["risk_signal"] is None
+    assert risk_run([], "숨이 안", phrases=())["utterance_judgment"]["risk_signal"] is None
+
+
+def test_risk_phrase_path_needs_no_model_and_reaches_planner_rule1():
+    from sim import Session
+    s = Session(risk_phrases=["숨이 안"])
+    s.nonutterance("SESSION_START")
+    out = s.turn([item(0, None, None, "OUT_OF_SCOPE", text="숨이 안 쉬어져요")], utterance="숨이 안 쉬어져요")
+    assert out["directive"]["action"] == "RISK_NOTICE" and out["staff_alert"]["kind"] == "RISK"
+    assert out["staff_alert"]["reasons"] == [{"kind": "RISK_SIGNAL", "evidence": ["숨이 안"]}]

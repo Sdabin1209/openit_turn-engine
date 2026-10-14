@@ -14,17 +14,23 @@ _ONES_RE = "|".join(sorted(_NATIVE_ONES, key=len, reverse=True))
 _RANGE_RE = "|".join(sorted(_RANGE_WORDS, key=len, reverse=True))
 _TOKEN = re.compile(
     rf"(?P<range>{_RANGE_RE})|(?P<arabic>\d+(?:\.\d+)?)|(?P<native>(?:{_TENS_RE})(?:{_ONES_RE})?|(?:{_ONES_RE}))"
-    rf"|(?P<sino>[일이삼사오육칠팔구]?십[일이삼사오육칠팔구]?|[일이삼사오육칠팔구])"
+    rf"|(?P<sino>(?:[일이삼사오육칠팔구]?백)(?:[일이삼사오육칠팔구]?십)?[일이삼사오육칠팔구]?|[일이삼사오육칠팔구]?십[일이삼사오육칠팔구]?|[일이삼사오육칠팔구])"
 )
 _HANGUL = re.compile(r"[가-힣]")
 _APPROX = ("정도", "쯤", "약 ", "대략")
 
 
 def _sino_value(s: str) -> int:
+    total = 0
+    if "백" in s:
+        a, _, s = s.partition("백")
+        total += (_SINO[a] if a else 1) * 100
     if "십" in s:
-        a, _, b = s.partition("십")
-        return (_SINO[a] if a else 1) * 10 + (_SINO[b] if b else 0)
-    return _SINO[s]
+        a, _, s = s.partition("십")
+        total += (_SINO[a] if a else 1) * 10
+    if s:
+        total += _SINO[s]
+    return total
 
 
 def find_numbers(text: str, unit_names: list[str]):
@@ -53,8 +59,10 @@ def find_numbers(text: str, unit_names: list[str]):
         ok = kind == "arabic" or (not rest) or (not _HANGUL.match(rest[0])) or rest.startswith(("이요", "요", "이나", "나", "에서", "정도", "쯤", "이", "번", "회", "개", "명"))
         if not ok:
             ok = any(rest.startswith(n) for n in names) or _TOKEN.match(rest) is not None
-        if kind == "sino" and not any(rest.lstrip().startswith(n) for n in names):
-            ok = False
+        if kind == "sino":
+            # 한자어 수사는 단위 이름이 바로 뒤에 오거나, 두 글자 이상이 말 전체일 때만 숫자로 본다(골든 S3d, C11: "백구십")
+            alone = (e - s) >= 2 and not text[:s].strip() and rest.strip() in ("", "이요", "요", "이에요", "예요", "입니다", "정도", "쯤")
+            ok = alone or any(rest.lstrip().startswith(n) for n in names)
         if not ok:
             pos = s + 1
             continue
@@ -115,3 +123,17 @@ NEGATION_MARKERS = ("안", "않", "못", "없")
 
 def has_negation(text: str) -> bool:
     return any(m in text for m in NEGATION_MARKERS)
+
+
+def unit_name_matches(name: str, squashed: str) -> bool:
+    """단위 이름이 말에 걸리는가. 이름의 수 자리(숫자나 n)는 아무 수로 읽고, 나머지 글자가 차례로 들어 있으면 건다(CR-001)."""
+    parts = [p for p in re.split(r"[\dnN]+", squash(name)) if p]
+    if not parts:
+        return False
+    pos = 0
+    for p in parts:
+        i = squashed.find(p, pos)
+        if i < 0:
+            return False
+        pos = i + len(p)
+    return True

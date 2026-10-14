@@ -672,16 +672,7 @@
     ],
     "fixed_sentences": [],
     "guide_sentences": [],
-    "question_sentences": [
-     {
-      "question_id": "q_drink",
-      "sentence": "q_drink 질문입니다"
-     },
-     {
-      "question_id": "q_amount",
-      "sentence": "q_amount 질문입니다"
-     }
-    ],
+    "question_sentences": [],
     "reask_sentences": [
      {
       "sentence": "status를 다시 말씀해 주세요",
@@ -830,16 +821,7 @@
      ],
      "fixed_sentences": [],
      "guide_sentences": [],
-     "question_sentences": [
-      {
-       "question_id": "q_drink",
-       "sentence": "q_drink 질문입니다"
-      },
-      {
-       "question_id": "q_amount",
-       "sentence": "q_amount 질문입니다"
-      }
-     ],
+     "question_sentences": [],
      "reask_sentences": [
       {
        "sentence": "status를 다시 말씀해 주세요",
