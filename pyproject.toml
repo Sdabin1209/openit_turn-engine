@@ -1,0 +1,22 @@
+[project]
+name = "turn-engine"
+version = "0.1.0"
+description = "문진 시스템 한 턴의 판단 로직(순수 함수 라이브러리, I8)"
+requires-python = ">=3.10"
+dependencies = ["jsonschema>=4.18"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["turn_engine"]
+
+[tool.setuptools.package-data]
+turn_engine = ["_schemas/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
