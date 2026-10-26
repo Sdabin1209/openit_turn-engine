@@ -1,0 +1,15 @@
+# 의존 잠금(2026-10-27, Python 3.12 깨끗한 가상환경에서 `pip install ".[dev]"` 뒤 pip freeze).
+# boundary-contracts는 태그 v2.0.0(커밋 5c46f1d0b98080309de0c8c999b5578c4e53f0bf)로 고정한다.
+boundary-contracts @ git+ssh://git@github.com/Sdabin1209/openit_boundary-contracts.git@v2.0.0
+attrs==26.1.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+rpds-py==2026.9.1
+typing_extensions==4.16.0
+# 개발용
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+Pygments==2.21.0
+pytest==9.1.1
