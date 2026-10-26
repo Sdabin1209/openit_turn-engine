@@ -6,8 +6,8 @@
 cd turn-engine
 python3 -m venv .venv
 . .venv/bin/activate
-pip install pytest jsonschema
-pip install -e .          # 시험이 `import turn_engine`을 하려면 필요
+pip install -e ".[dev]"    # boundary-contracts를 태그 v2.0.0으로 git+ssh에서 설치한다(SSH 키 필요)
+# 잠금: requirements.lock (깨끗한 환경에서 pip install -r requirements.lock 후 pip install -e . --no-deps)
 ```
 
 `.venv/`는 `.gitignore`에 있다. GPU, 네트워크, 컨테이너는 필요 없다. 서비스가 없으므로 이미지 빌드와 `/healthz` 확인은 해당하지 않는다.
@@ -21,6 +21,17 @@ python tests/fuzz_tool.py 120        # 무작위 발화 열 120개(수 분). 예
 ```
 
 수용 기준과 시험의 대응은 `docs/design.md` 6절. 기준 네 가지(결정성, 예시 입력→출력 스키마 통과, I/O·시간·난수 없음, 규칙 문서 밖 정책 없음)는 `tests/test_contract.py`와 `docs/change-requests/`가 맡는다.
+
+## 학습 데이터 전수 검증 (계약 2.0.0 기준 시험)
+
+학습 서버 데이터는 읽기 전용으로 표준입력에 흘려 검사한다. 파일을 서버에 만들거나 이 PC에 저장하지 않는다. 허용 경로는 `~/taehyeon/data/dataset_10_14`뿐이다.
+
+```
+for f in train val test; do ssh -o BatchMode=yes -o ConnectTimeout=15 openit "cat ~/taehyeon/data/dataset_10_14/lora_a_$f.jsonl"; done \
+  | .venv/bin/python scripts/validate_dataset_a.py --mutate     # 위반 0이어야 종료 코드 0
+```
+
+`--mutate`는 통과한 행을 일부러 망가뜨려 검사기가 잡는지 센다(검사기가 느슨해서 0인 것이 아님을 보이는 용도).
 
 ## 골든 비교
 

@@ -41,7 +41,7 @@ SUPPORTED_RUNTIME_CONTRACT_VERSION: int
 
 - 소비하는 계약: 문진 스키마(`../survey-service/schema`)의 `AnswerNormalizerInput`/`NormalizerOutput`, `AnswerJudgeInput`/`JudgeOutput`, `RecordWriterInput`/`StoreResult`, `DialoguePlannerInput`/`PlannerOutput`과 하위 타입. 스키마 사본은 `turn_engine/_schemas/`에 있고 시험이 원본과 같음을 확인한다.
 - 지원하는 계약 버전: 문진 스키마 정수 버전 **1** 한 값(`SUPPORTED_RUNTIME_CONTRACT_VERSION = 1`). 사본의 `CONTRACT_VERSION`이 다르면 가져올 때 `RuntimeError`.
-- 소비하는 SDK: 없음. boundary-contracts에도 의존하지 않는다.
+- 소비하는 SDK: 없음. 0.3.0부터 boundary-contracts v2.0.0에 의존한다(8절).
 - 외부 패키지: `jsonschema`(계약 검증). Python 3.10 이상.
 - 업무 규칙: `docs/rules/`(헤드가 전달). 규칙 문서에 없는 정책은 구현하지 않고 `docs/change-requests/`에 둔다.
 
@@ -80,3 +80,34 @@ SUPPORTED_RUNTIME_CONTRACT_VERSION: int
 ## 7. 열린 변경 요청
 
 `docs/change-requests/README.md`에 목록이 있다(CR-001~CR-009). CR-001~008은 헤드 답변과 골든 대조로 결정했고(각 파일의 "결정" 절), CR-009는 골든과 다른 62쌍의 분류다.
+
+## 8. 계약 2.0.0 이전 (2026-10-27, 0.3.0 제안)
+
+기준: boundary-contracts `v2.0.0`, INTERFACES I8(출력 검증 라이브러리로 대체), D74, D75.
+
+### 8-1. 제공하는 것
+
+```python
+from turn_engine import validate_extraction, Violation, QuestionFlowTable, SkipRule, DATASET_V2_FLOW
+
+validate_extraction(input: ActionExtractionInput, output: ActionExtraction, flow: QuestionFlowTable) -> list[Violation]
+Violation(code: str, path: str, message: str)     # NamedTuple. message에 입력·출력 값을 싣지 않는다
+QuestionFlowTable(order: Sequence[str], skips: Sequence[SkipRule] = ())
+SkipRule(slot: str, value, skip_item: str)        # slot(괄호 없는 문항.칸)에 저장된 값이 value이면 skip_item을 묻지 않는다
+```
+
+- 순수·결정적. 입력과 출력을 바꾸지 않는다. 위반이 없으면 빈 목록.
+- `input`이 `ActionExtractionInput` 스키마를 어기면 `ContractViolation`(`.contract == "ActionExtractionInput"`). `output`이 스키마를 어기는 것은 예외가 아니라 `OUTPUT_SCHEMA` 위반으로 돌려준다(형식 검증은 model-runtime의 몫이지만 안전망이므로 거부하지 않고 보고한다).
+- 위반 코드: `OUTPUT_SCHEMA`, `TARGET_NOT_IN_VALUES`, `NEXT_ITEM_MISMATCH`, `SKIP_ORDER_MISMATCH`, `SAVE_RULE`, `UNKNOWN_ITEM`(문항 순서 표에 없는 문항). 앞의 다섯은 I8 초안이 든 예 중 `OUTPUT_SCHEMA`와 `UNKNOWN_ITEM`을 더한 것이다(제안).
+- 검사 규칙: (a) `targets`는 `values`의 key. (b) REASK·REDIRECT는 `next_item == question_id`, CONFIRM은 `targets` 칸의 문항, NEXT·CORRECT·HOLD·SKIP은 순서·건너뛰기의 다음 문항(한 말에 여러 문항이 나오면 가장 뒤 문항 기준, `save`가 true인 값으로 건너뛰기 판단). 같은 말에서 일부 칸이 채워진 문항으로 넘어가는 것은 위반이 아니다(I8). (c) 건너뛰기를 어기거나 조건 없이 건너뛰면 `SKIP_ORDER_MISMATCH`, 그 밖의 어긋남은 `NEXT_ITEM_MISMATCH`. (d) `save`는 ANSWERED·CORRECTION일 때만 true, MISSING·UNCLEAR·UNKNOWN·REJECTED의 `value`는 null.
+- 위반이 나오면 survey-service는 `OUTPUT_INVALID`와 같게 처리한다(I8, D75-1).
+- `QuestionFlowTable`을 문진 스키마에서 만드는 변환은 아직 없다(미정, CR-010). `DATASET_V2_FLOW`는 학습 데이터 v2의 31문항·건너뛰기 7건이며 임시다.
+
+### 8-2. 폐기 표시
+
+`normalize`, `judge`, `write_record`, `plan`은 `DeprecationWarning`을 내며 0.2.0과 같게 동작한다. 서비스는 더 쓰지 않는다(D74). 제거는 survey-service 이전이 끝난 뒤. 그때까지 `SUPPORTED_RUNTIME_CONTRACT_VERSION`은 1이고 `turn_engine/_schemas/`의 문진 스키마 사본을 유지한다.
+
+### 8-3. 소비하는 것(3절 갱신)
+
+- boundary-contracts `v2.0.0`(태그로 설치. `pyproject.toml`, `requirements.lock`). 쓰는 것은 `boundary_contracts.validator("ActionExtractionInput"/"ActionExtraction")`뿐이다. 계약 스키마의 복사본은 만들지 않는다.
+- 문진 스키마(정수 버전 1)는 폐기 함수가 쓰는 동안 그대로.

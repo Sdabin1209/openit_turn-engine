@@ -2,6 +2,16 @@
 
 형식: 버전, 날짜, 변경, 출력 변화 여부. 버전 부여 방식은 `docs/boundary.md` 4절.
 
+## 0.3.0 (2026-10-27, 태그 전)
+
+boundary-contracts v2.0.0(D74, D75) 이전. 공개 함수 추가와 폐기 표시이므로 MINOR(0.x 규칙). `normalize` 등 기존 함수의 출력은 0.2.0과 같다.
+
+- 추가: `validate_extraction(input, output, flow) -> list[Violation]`. LoRA-A 출력(`ActionExtraction`)의 의미 검증(targets, next_item, 건너뛰기 순서, save 규칙). `Violation(code, path, message)`, `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`.
+- 폐기 표시: `normalize`, `judge`, `write_record`, `plan`은 호출 시 `DeprecationWarning`을 낸다. 동작은 그대로. 제거 시점은 survey-service 이전이 끝난 뒤(헤드 지시).
+- 의존: `boundary-contracts`를 태그 `v2.0.0`으로 고정(`pyproject.toml`, `requirements.lock`). 입력 검증에 계약 패키지의 `ActionExtractionInput` 스키마를 쓴다(복사본 없음).
+- 시험: `tests/test_validation.py` 42개. 학습 데이터 A 출력 5,077행 전수 위반 0(`scripts/validate_dataset_a.py`).
+- `SUPPORTED_RUNTIME_CONTRACT_VERSION`은 1 그대로다(문진 스키마 정수 버전, D75-2). 폐기 함수가 아직 그 스키마를 쓴다.
+
 ## 0.2.0 (2026-10-15, 태그 전)
 
 골든(원본 요구사항 케이스의 정적 예시 868쌍)과 헤드 답변을 반영. 같은 입력의 출력이 달라지므로 MINOR.

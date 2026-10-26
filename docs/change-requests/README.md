@@ -13,3 +13,4 @@
 | CR-007 | 규칙 용어와 Action·AlertKind 대응 | plan |
 | CR-008 | 규칙 해석이 갈리는 곳(플래너·판정) 확인 요청 | judge, plan |
 | CR-009 | 골든 예시와 다른 출력 62쌍의 분류 | 전부 |
+| CR-010 | 문항 순서·건너뛰기 표(QuestionFlowTable)의 출처와 형식 (계약 2.0.0) | validate_extraction |
