@@ -12,7 +12,7 @@ from .planner import plan as _plan
 from .validation import Violation, validate_extraction
 from .writer import write_record as _write_record
 
-ENGINE_VERSION = "0.3.0"
+ENGINE_VERSION = "0.3.1"
 
 # 계약 2.0.0(D74·D75)에서 정규화기·판정기·기록기·Plan은 서비스에 없다. 폐기 표시만 하고 제거 시점은
 # survey-service 이전이 끝난 뒤다(헤드 지시, migration-2.0.0). 동작은 0.2.0과 같다.

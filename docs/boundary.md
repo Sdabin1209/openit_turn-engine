@@ -41,7 +41,7 @@ SUPPORTED_RUNTIME_CONTRACT_VERSION: int
 
 - 소비하는 계약: 문진 스키마(`../survey-service/schema`)의 `AnswerNormalizerInput`/`NormalizerOutput`, `AnswerJudgeInput`/`JudgeOutput`, `RecordWriterInput`/`StoreResult`, `DialoguePlannerInput`/`PlannerOutput`과 하위 타입. 스키마 사본은 `turn_engine/_schemas/`에 있고 시험이 원본과 같음을 확인한다.
 - 지원하는 계약 버전: 문진 스키마 정수 버전 **1** 한 값(`SUPPORTED_RUNTIME_CONTRACT_VERSION = 1`). 사본의 `CONTRACT_VERSION`이 다르면 가져올 때 `RuntimeError`.
-- 소비하는 SDK: 없음. 0.3.0부터 boundary-contracts v2.0.1에 의존한다(8절).
+- 소비하는 SDK: 없음. 0.3.0부터 boundary-contracts에 의존한다(0.3.0은 v2.0.0, 0.3.1부터 v2.0.1. 8절).
 - 외부 패키지: `jsonschema`(계약 검증). Python 3.10 이상.
 - 업무 규칙: `docs/rules/`(헤드가 전달). 규칙 문서에 없는 정책은 구현하지 않고 `docs/change-requests/`에 둔다.
 
