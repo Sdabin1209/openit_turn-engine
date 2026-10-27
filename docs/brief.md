@@ -1,6 +1,6 @@
 # 영역 브리프: turn-engine (공유 라이브러리)
 
-> **계약 상태 (2026-10-27 갱신).** boundary-contracts v2.0.0(D74·D75)에서 I8은 "LoRA-A 출력의 의미 검증 안전망"(`validate_extraction`)으로 바뀌었다. 이 라이브러리는 boundary-contracts v2.0.1(태그)의 `ActionExtraction*` 스키마를 소비한다. 아래 본문 중 네 컴포넌트(normalize·judge·write_record·plan)에 관한 부분은 v1 시점의 기술이며 폐기 표시됐다(`docs/boundary.md` 8절).
+> **계약 상태 (2026-10-27 갱신).** boundary-contracts v2.0.0(D74·D75)에서 I8은 "LoRA-A 출력의 의미 검증 안전망"(`validate_extraction`)으로 바뀌었다. 이 라이브러리는 boundary-contracts v2.0.2(태그)의 `ActionExtraction*` 스키마를 소비한다. 아래 본문 중 네 컴포넌트(normalize·judge·write_record·plan)에 관한 부분은 v1 시점의 기술이며 0.4.0에서 코드가 제거됐다(`docs/boundary.md` 8절).
 > **읽기.** `../survey-service/schema`는 문진 서비스의 데이터 스키마(스키마만 남긴 최소 구성)다. 구현이 가져가는 계약은 `schemas/<계약명>.json`(JSON Schema Draft 2020-12), 컴포넌트별 입력·출력 대응은 `COMPONENTS.yaml`, 정수 버전은 `CONTRACT_VERSION`이다. 읽기 전용이다.
 > **버전(D14, D19).** 문진 스키마 정수 버전(`CONTRACT_VERSION`)에 정확히 일치해야 한다.
 > **업무 규칙.** 이 영역이 구현하거나 의존하는 업무 요구는 `docs/rules/`에 있다(헤드가 전달, 출처는 `docs/rules/SOURCE.md`). 규칙 문서에 없는 정책은 임의로 만들지 말고 `docs/change-requests/`에 쓴다.
@@ -27,7 +27,7 @@
 
 상대 영역은 블랙박스다. 아래 인터페이스 번호의 시그니처, 오류, 멱등성은 `../boundary-contracts/INTERFACES.md`와 `CONVENTIONS.md`가 정한다. 이 명세 밖의 것을 상대에게 기대하거나 가정하지 않는다.
 
-- 내는 것: **I8** (`normalize`, `judge`, `write_record`, `plan`, `ENGINE_VERSION`).
+- 내는 것: **I8** (`validate_extraction`, `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`, `ENGINE_VERSION`; 0.4.0).
 - 받는 것: 문진 스키마의 입력 계약.
 - 해야 하는 것: 순수 함수이며 결정적이다. 입력 위반은 `ContractViolation`.
 

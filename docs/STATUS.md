@@ -1,27 +1,24 @@
-# STATUS (2026-10-27, boundary-contracts v2.0.0 이전)
+# STATUS (2026-10-27, 0.4.0)
 
-브랜치 `migrate-contracts-2.0.0`. push·태그 없음(헤드 확인 뒤).
+브랜치 `train-0.4`. push·태그 없음(헤드 확인 뒤).
 
 ## 한 일
 
-- `validate_extraction(input, output, flow) -> list[Violation]`, `Violation`, `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW` 추가(`turn_engine/validation.py`, `flow.py`).
-- `normalize`/`judge`/`write_record`/`plan` 폐기 표시(`DeprecationWarning`, 동작 불변). 제거는 survey-service 이전 뒤.
-- boundary-contracts v2.0.1을 태그로 설치(`pyproject.toml`, `requirements.lock`). 버전 0.3.1 제안(태그 v0.3.0은 v2.0.0 고정).
-- 학습 데이터 A 출력 전수 검증: `scripts/validate_dataset_a.py`(읽기 전용 스트림). 결과는 `docs/CHANGELOG.md`와 보고 참조.
-- 문서: `docs/boundary.md` 8절, `docs/runbook.md`, `docs/CHANGELOG.md`, `docs/change-requests/CR-010`.
+- G07: v1 폐기 코드(`normalize`, `judge`, `write_record`, `plan`, `OutputContractError`, `SUPPORTED_RUNTIME_CONTRACT_VERSION`, 문진 스키마 사본)와 딸린 시험·예시·골든 제거. 이웃 리포 grep 결과 사용처 없음.
+- boundary-contracts v2.0.2로 올림(`pyproject.toml`, `requirements.lock`, 문서). venv 재설치로 2.0.2 확인.
+- 버전 0.4.0(`pyproject.toml`, `ENGINE_VERSION`, `docs/CHANGELOG.md`).
+- 문서 정리: `docs/boundary.md`, `docs/design.md`, `docs/runbook.md`, `docs/brief.md`.
 
-## 시험 결과 (실제로 돌린 것)
+## 시험 결과
 
-- 이 리포 `.venv`(문진 스키마 원본 있음): `python -m pytest tests -q` -> 1246 passed, 1 skipped(`TURN_ENGINE_DATASET_A` 없을 때의 데이터 전수 시험).
-- 깨끗한 두 번째 venv(리포 사본을 워크스페이스 밖에 두고 `pip install ".[dev]"`): 1244 passed, 3 skipped(`../survey-service` 원본이 없어 건너뜀).
-- 학습 데이터 A(`lora_a_train/val/test`) 3,982+549+546 = 5,077행: 위반 0. 계약의 `tools/validate_dataset_v2.py a`도 5,077 pass(참고 정보 57건, 부분 선채움 NEXT).
+`.venv`에서 `python -m pytest tests -q`: 결과는 커밋 메시지와 보고에 적는다. 시험 수가 크게 줄어든 것은 v1 함수 시험(골든 868쌍 등)을 함께 제거했기 때문이다.
 
 ## 남은 일 / 미정
 
-1. 헤드 확인 뒤 push, 태그 `v0.3.1`.
+1. 헤드 확인 뒤 push, 태그 `v0.4.0`.
 2. CR-010: 문항 순서·건너뛰기 표의 출처와 형식(헤드 결정).
-3. 폐기 함수 제거 시점(survey-service 이전 뒤). 제거 때 문진 스키마 사본과 정수 버전 1 의존도 정리.
-4. 기존 `tests/fuzz_tool.py`는 이번에 돌리지 않았다.
+3. `docs/rules/`와 CR-001~009는 역사 기록으로 남겼다. 지울지는 헤드 결정.
+4. 깨끗한 두 번째 환경 검증은 이번에 하지 않았다.
 
 ## 막힌 것
 

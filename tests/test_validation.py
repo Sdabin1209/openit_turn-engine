@@ -227,23 +227,14 @@ def test_dataset_v2_flow_shape():
     assert len(FLOW.skips) == 7
 
 
-# 폐기 표시, 의존
+# 의존
 
-@pytest.mark.parametrize("name", ["normalize", "judge", "write_record", "plan"])
-def test_old_functions_are_marked_deprecated(name):
-    fn = getattr(te, name)
-    assert getattr(fn, "__deprecated__", False)
-    with pytest.warns(DeprecationWarning):
-        with pytest.raises(te.ContractViolation):
-            fn({})
-
-
-def test_boundary_contracts_pinned_to_v2_0_1():
+def test_boundary_contracts_pinned_to_v2_0_2():
     text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "openit_boundary-contracts.git@v2.0.1" in text
+    assert "openit_boundary-contracts.git@v2.0.2" in text
     import boundary_contracts
     from importlib.metadata import version
-    assert version("boundary-contracts") == "2.0.1"
+    assert version("boundary-contracts") == "2.0.2"
     assert boundary_contracts.PIPELINE_SCHEMA_VERSION == "2.0"
 
 
@@ -275,3 +266,18 @@ def test_dataset_script_reports_violation_exit_code(tmp_path):
     assert r.returncode == 0 and "violating_rows=0" in r.stdout
     r = subprocess.run([sys.executable, script], input=json.dumps(good) + "\n" + json.dumps(bad) + "\n", capture_output=True, text=True)
     assert r.returncode == 1 and "violating_rows=1" in r.stdout
+
+
+# 버전, 공개 API
+
+def test_engine_version_matches_package_metadata():
+    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert te.ENGINE_VERSION == "0.4.0"
+    assert f'version = "{te.ENGINE_VERSION}"' in text
+
+
+def test_removed_v1_names_are_gone():
+    for name in ("normalize", "judge", "write_record", "plan", "OutputContractError", "SUPPORTED_RUNTIME_CONTRACT_VERSION"):
+        assert not hasattr(te, name) and name not in te.__all__
+    assert set(te.__all__) == {"ENGINE_VERSION", "ContractViolation", "validate_extraction", "Violation",
+                               "QuestionFlowTable", "SkipRule", "DATASET_V2_FLOW"}

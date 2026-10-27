@@ -2,6 +2,16 @@
 
 형식: 버전, 날짜, 변경, 출력 변화 여부. 버전 부여 방식은 `docs/boundary.md` 4절.
 
+## 0.4.0 (2026-10-27, 태그 전)
+
+깨지는 변경(MAJOR 규칙, 0.x라서 MINOR 자리). 공개 이름이 사라진다. `validate_extraction` 등 살아 있는 API의 출력은 0.3.1과 같다.
+
+- 깨지는 변경(G07): `normalize`, `judge`, `write_record`, `plan`, `OutputContractError`, `SUPPORTED_RUNTIME_CONTRACT_VERSION`을 제거했다. 모듈 `judge.py`, `normalizer.py`, `planner.py`, `writer.py`, `_text.py`, `_deprecated.py`와 문진 스키마 사본 `turn_engine/_schemas/`도 제거했다. 공개 API(`__all__`)는 `ENGINE_VERSION`, `ContractViolation`, `validate_extraction`, `Violation`, `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`.
+- 이웃 리포(survey-service, release-gate, model-lab, ops-feedback, model-runtime, deploy, synthetic-data, question-authoring)에서 제거한 이름을 import·호출하는 코드가 없음을 확인했다.
+- 함께 제거: 입출력 예시 `examples/`, `scripts/gen_examples.py`, `scripts/classify_golden.py`, 골든 `tests/golden/`, `tests/golden_known.json`, 시험 도구 `sim.py`, `fixtures.py`, `fuzz_tool.py`, 시험 `test_golden.py`, `test_judge.py`, `test_normalizer.py`, `test_planner.py`, `test_writer.py`, `test_contract.py`. `pyproject.toml`의 `package-data`와 DeprecationWarning 필터.
+- 의존: `boundary-contracts`를 `v2.0.1`에서 `v2.0.2`로 올림(`pyproject.toml`, `requirements.lock`).
+- 시험: 남은 것은 `tests/test_validation.py`. 버전 0.4.0, 의존 태그 v2.0.2, 제거된 이름이 없음을 확인하는 시험을 추가했다.
+
 ## 0.3.1 (2026-10-27, 태그 전)
 
 의존 태그만 바뀐 PATCH. 코드와 출력은 0.3.0과 같다.
