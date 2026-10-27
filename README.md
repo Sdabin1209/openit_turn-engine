@@ -63,13 +63,12 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 ## 5. 현재 상태
 
 확인된 것:
-- 버전 0.4.0, 커밋 23973fc가 `main`과 `origin/main`, 로컬 태그 `v0.4.0`이 가리키는 곳이다(이 세션에서 `git rev-parse`로 확인).
-- `.venv`에서 39 통과, 1 건너뜀(이 세션에서 실행). 건너뛴 이유는 확인하지 않았다.
+- 버전 0.4.0, 태그 `v0.4.0`은 커밋 23973fc를 가리키고 원격(origin)에도 올라가 있다(`git ls-remote --tags origin`으로 확인). `main`은 그 위에 README 커밋 하나가 더 있다.
+- `.venv`에서 39 통과, 1 건너뜀(실행). 건너뛴 시험은 학습 데이터 A 전수 검사이며 환경 변수 `TURN_ENGINE_DATASET_A`가 없어서다(`pytest -rs`로 확인).
 - 0.3.0 시점에 학습 데이터 A 5,077행 전수 위반 0(`docs/CHANGELOG.md` 0.3.0 항목). 0.4.0에서 다시 돌린 기록은 찾지 못했다(`docs/STATUS.md`는 0.3.x와 출력이 같다고만 함).
 
 확인하지 못한 것:
 - 깨끗한 두 번째 환경에서의 설치와 시험(`docs/STATUS.md` 남은 일 4).
-- `v0.4.0` 태그가 원격에 올라갔는지(로컬 태그만 확인).
 - 이웃 영역이 실제로 제거된 이름을 안 쓰는지: 문서의 grep 결과를 옮긴 것이며 이 세션에서 다시 확인하지 않았다(`docs/boundary.md` 8-2).
 
 ## 6. 이 영역의 열린 항목
@@ -82,14 +81,14 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 | U11 | `validate_extraction` 기반 의미 위반율 지표를 평가에 넣지 않음 | 열림 | 다른 영역·사용자 결정(boundary 규칙과 충돌, 허락 필요, 학습 담당 확인) |
 | U12 | 두 번째 독립 머신에서의 영역 시험 확인 | 열림 | 다른 환경 필요(GPU 아님) |
 
-대장에는 없지만 이 리포 문서에 열려 있는 것: CR-010(`QuestionFlowTable`을 문진 스키마에서 만드는 방법과 출처. `DATASET_V2_FLOW`는 임시), `docs/rules/`와 CR-001~009를 지울지(둘 다 헤드 결정, `docs/STATUS.md`). CR-010은 대장 ID가 없다.
+대장에는 없지만 이 리포 문서에 열려 있는 것: CR-010(`QuestionFlowTable`을 문진 스키마에서 만드는 방법과 출처. `DATASET_V2_FLOW`는 임시), `docs/rules/`와 CR-001~009를 지울지(둘 다 헤드 결정 대기, `docs/STATUS.md`). CR-010은 대장 ID가 없고, 현재 API 사용과 0.4.0 릴리스를 막지 않는다.
 
 ## 7. 더 자세한 문서
 
 | 문서 | 내용 |
 |---|---|
 | `CLAUDE.md` | 이 영역 에이전트 지침 |
-| `docs/brief.md` | 영역 목적, 범위, 수용 기준(본문 일부는 v1 시점 기술) |
+| `docs/brief.md` | 영역 목적, 범위, 수용 기준(1~3절을 0.4.0 구조로 고침) |
 | `docs/boundary.md` | 제공 API, 위반 코드, 검사 규칙, 버전 부여, 장애 영향 |
 | `docs/design.md` | 내부 구조 |
 | `docs/runbook.md` | 개발 환경, 시험, 학습 데이터 검증, 릴리스 절차 |
