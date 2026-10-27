@@ -36,20 +36,40 @@ def test_versions():
     assert te.SUPPORTED_RUNTIME_CONTRACT_VERSION == int((PKG_SCHEMAS / "CONTRACT_VERSION").read_text().strip())
 
 
+# 제외(폐기): normalize/judge/write_record/plan의 v1 스키마(AnswerNormalizerInput, RecordWriterInput 등)는 survey-service가
+# D74로 지웠다. turn_engine/_schemas의 복사본은 폐기된 모듈이 쓰는 마지막 사본이라 원본 대조 대상이 아니다(제거 시점은 이전 완료 뒤).
+# 아래 두 시험은 지금 survey-service/schema에 실제 있고 turn-engine이 쓰는 것(CONTRACT_VERSION, QuestionFlow, 컴포넌트 표기)만 대조한다.
 @pytest.mark.skipif(not SCHEMA_SRC.exists(), reason="문진 스키마 원본이 없는 환경")
-def test_vendored_schemas_match_survey_schema():
+def test_survey_schema_pieces_used_by_turn_engine_exist():
     assert (SCHEMA_SRC / "CONTRACT_VERSION").read_text().strip() == (PKG_SCHEMAS / "CONTRACT_VERSION").read_text().strip()
-    for f in PKG_SCHEMAS.glob("*.json"):
-        assert f.read_bytes() == (SCHEMA_SRC / "schemas" / f.name).read_bytes(), f.name
+    schemas = sorted((SCHEMA_SRC / "schemas").glob("*.json"))
+    assert schemas, "survey-service/schema/schemas가 비어 있다"
+    flow = SCHEMA_SRC / "schemas" / "QuestionFlow.json"  # validate_extraction의 QuestionFlowTable 출처(D76)
+    assert flow.exists()
+    assert json.loads(flow.read_text(encoding="utf-8"))
+    # 계약 스키마는 복사본이 아니라 boundary-contracts 패키지에서 읽는다
+    from boundary_contracts import load_schema
+    for name in ("ActionExtractionInput", "ActionExtraction"):
+        assert load_schema(name)
 
 
 @pytest.mark.skipif(not SCHEMA_SRC.exists(), reason="문진 스키마 원본이 없는 환경")
 def test_component_contract_names_match_components_yaml():
     text = (SCHEMA_SRC / "COMPONENTS.yaml").read_text(encoding="utf-8")
-    for cid, fn in (("answer_normalizer", "normalize"), ("answer_judge", "judge"), ("record_writer", "write_record"),
-                    ("dialogue_planner", "plan")):
-        block = text.split(f"id: {cid}\n", 1)[1].split("\n- name:", 1)[0]
-        assert f"input: {IN_SCHEMA[fn]}" in block and f"output: {OUT_SCHEMA[fn]}" in block
+    checked = 0
+    for cid, needles in (
+        ("action_extractor", ("input: ActionExtractionInput (boundary-contracts)", "output: ActionExtraction (boundary-contracts)")),
+        ("extraction_validator", ("validate_extraction", "table: QuestionFlow")),
+    ):
+        # 항목은 "- name:"으로 시작하고 id가 contracts 앞에 온다. id가 든 항목 전체를 잘라 쓴다.
+        entries = ["- name:" + e for e in text.split("- name:")[1:]]
+        hits = [e for e in entries if f"id: {cid}\n" in e]
+        assert len(hits) == 1, cid
+        block = hits[0]
+        for n in needles:
+            assert n in block, (cid, n)
+            checked += 1
+    assert checked == 4
 
 
 def test_examples_exist_for_every_component():
