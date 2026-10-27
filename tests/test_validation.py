@@ -238,12 +238,12 @@ def test_old_functions_are_marked_deprecated(name):
             fn({})
 
 
-def test_boundary_contracts_pinned_to_v2_0_0():
+def test_boundary_contracts_pinned_to_v2_0_1():
     text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "openit_boundary-contracts.git@v2.0.0" in text
+    assert "openit_boundary-contracts.git@v2.0.1" in text
     import boundary_contracts
     from importlib.metadata import version
-    assert version("boundary-contracts") == "2.0.0"
+    assert version("boundary-contracts") == "2.0.1"
     assert boundary_contracts.PIPELINE_SCHEMA_VERSION == "2.0"
 
 

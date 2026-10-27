@@ -6,7 +6,7 @@
 cd turn-engine
 python3 -m venv .venv
 . .venv/bin/activate
-pip install -e ".[dev]"    # boundary-contracts를 태그 v2.0.0으로 git+ssh에서 설치한다(SSH 키 필요)
+pip install -e ".[dev]"    # boundary-contracts를 태그 v2.0.1으로 git+ssh에서 설치한다(SSH 키 필요)
 # 잠금: requirements.lock (깨끗한 환경에서 pip install -r requirements.lock 후 pip install -e . --no-deps)
 ```
 
