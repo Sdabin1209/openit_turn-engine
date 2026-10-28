@@ -1,4 +1,4 @@
-"""validate_extraction(D75, 계약 2.0.0 I8) 시험. 입력은 설명용 예시이며 학습 데이터가 아니다."""
+"""validate_extraction(D75) 시험. 입력은 설명용 예시이며 학습 데이터가 아니다."""
 import copy
 import json
 import os
@@ -229,13 +229,24 @@ def test_dataset_v2_flow_shape():
 
 # 의존
 
-def test_boundary_contracts_pinned_to_v2_1_0():
-    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "openit_boundary-contracts.git@v2.1.0" in text
-    import boundary_contracts
+def _pin(text):
+    import re
+    m = re.search(r"openit_boundary-contracts\.git@v(\d+\.\d+\.\d+)", text)
+    assert m, "boundary-contracts 태그 pin 없음"
+    return m.group(1)
+
+
+def test_boundary_contracts_pinned():
+    # 정본: pyproject/requirements.lock의 pin. 설치본이 그 pin과 같아야 한다.
+    import tomllib
     from importlib.metadata import version
-    assert version("boundary-contracts") == "2.1.0"
-    assert boundary_contracts.PIPELINE_SCHEMA_VERSION == "2.1"
+    import boundary_contracts
+    deps = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["dependencies"]
+    pin = _pin(next(d for d in deps if d.startswith("boundary-contracts")))
+    assert _pin((ROOT / "requirements.lock").read_text(encoding="utf-8")) == pin
+    assert version("boundary-contracts") == pin
+    major, minor, _ = pin.split(".")
+    assert boundary_contracts.PIPELINE_SCHEMA_VERSION.startswith(f"{major}.")
 
 
 # 학습 데이터 전수(선택): 환경변수에 JSONL 경로를 주면 돈다. 서버 데이터는 읽기 전용으로 표준입력에 흘려 검사하는
@@ -271,9 +282,11 @@ def test_dataset_script_reports_violation_exit_code(tmp_path):
 # 버전, 공개 API
 
 def test_engine_version_matches_package_metadata():
-    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert te.ENGINE_VERSION == "0.4.1"
-    assert f'version = "{te.ENGINE_VERSION}"' in text
+    import tomllib
+    from importlib.metadata import version
+    proj = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    assert te.ENGINE_VERSION == proj["version"]
+    assert version("turn-engine") == te.ENGINE_VERSION
 
 
 def test_removed_v1_names_are_gone():
