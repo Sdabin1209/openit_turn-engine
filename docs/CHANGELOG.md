@@ -2,6 +2,9 @@
 
 형식: 버전, 날짜, 변경, 출력 변화 여부. 버전 부여 방식은 `docs/boundary.md` 4절.
 
+## 0.4.2 (계약 v2.1.1 정렬)
+- 계약 pin을 v2.1.1로 올렸다(코드 변경 없음). 0.4.1은 계약 v2.1.0 pin이라 새 열차와 맞지 않아 대체한다.
+
 ## 0.4.1 (2026-10-28)
 
 정렬 릴리스. 출력 변화 없음(`validate_extraction` 등 공개 API와 동작은 0.4.0과 같다). 의존 boundary-contracts를 `v2.0.2`에서 `v2.1.0`으로 올렸다(`pyproject.toml`, `requirements.lock`). 이유: D80 완전 일치를 위해 열차 순서를 boundary v2.1.0 -> turn-engine -> model-runtime -> 영역으로 맞춘다. `ENGINE_VERSION`과 `pyproject.toml` 버전을 0.4.1로 올렸다. 시험 `test_boundary_contracts_pinned`의 기대값을 v2.1.0, `PIPELINE_SCHEMA_VERSION` "2.1"로 고쳤다.
