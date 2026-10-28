@@ -1,6 +1,6 @@
 # 영역 브리프: turn-engine (공유 라이브러리)
 
-> **계약 상태 (2026-10-27 갱신).** boundary-contracts v2.0.0(D74·D75)에서 I8은 "LoRA-A 출력의 의미 검증 안전망"(`validate_extraction`)으로 바뀌었다. 이 라이브러리는 boundary-contracts(태그는 `pyproject.toml`이 정본)의 `ActionExtraction*` 스키마를 소비한다. 본문 1~3절은 0.4.0 현재 구조(`validate_extraction`, `QuestionFlowTable`, `flow`)로 고쳤다. 예전 네 컴포넌트(normalize·judge·write_record·plan)는 0.4.0에서 코드가 제거됐다(`docs/boundary.md` 8-2). 4~9절은 컴포넌트 이름을 쓰지 않는 일반 기준이라 그대로 두었고, 계약·의존 표현만 현재에 맞췄다.
+> **계약 상태 (2026-10-27 갱신).** boundary-contracts v2.0.0(D74·D75)에서 I8은 "LoRA-A 출력의 의미 검증 안전망"(`validate_extraction`)으로 바뀌었다. 이 라이브러리는 boundary-contracts(태그는 `pyproject.toml`이 정본)의 `ActionExtraction*` 스키마를 소비한다. 본문 1~3절은 0.4.0 현재 구조(`validate_extraction`, `QuestionFlowTable`, `flow`)로 고쳤다. v1의 네 컴포넌트는 0.4.0에서 코드가 제거됐다(`docs/boundary.md` 8-2). 4~9절은 컴포넌트 이름을 쓰지 않는 일반 기준이라 그대로 두었고, 계약·의존 표현만 현재에 맞췄다.
 > **읽기.** 입력·출력 스키마는 boundary-contracts 패키지에서 `validator`로 읽는다. 복사본은 없다. `../survey-service/schema`와 `../boundary-contracts`는 읽기 전용이다.
 > **버전.** boundary-contracts 태그(`pyproject.toml`, `requirements.lock`)로 고정하고, 라이브러리 버전은 `ENGINE_VERSION`이다(`docs/boundary.md` 4절).
 > **업무 규칙.** 계약에 없는 정책은 임의로 만들지 말고 `docs/change-requests/`에 쓴다.
@@ -55,7 +55,7 @@
 
 ## 8. 시드
 
-처음 시드는 Normalizer, Judge, Record Writer, Planner 네 컴포넌트였다(v1, 역사 기록). 0.3.0에서 `validate_extraction`이 추가되고 0.4.0에서 네 컴포넌트가 제거됐다(`docs/CHANGELOG.md`).
+처음 시드는 네 컴포넌트였다(v1, 역사 기록). 0.3.0에서 `validate_extraction`이 추가되고 0.4.0에서 네 컴포넌트가 제거됐다(`docs/CHANGELOG.md`).
 
 ## 9. 요구하는 산출물
 

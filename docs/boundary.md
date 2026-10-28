@@ -15,7 +15,7 @@ from turn_engine import validate_extraction, Violation, QuestionFlowTable, SkipR
 from turn_engine import ENGINE_VERSION, ContractViolation
 ```
 
-시그니처와 위반 코드는 8절. 입출력은 JSON으로 직렬화되는 `dict`·`list`·문자열·수·`bool`·`None`이다. 0.4.0에서 v1의 `normalize`, `judge`, `write_record`, `plan`, `OutputContractError`, `SUPPORTED_RUNTIME_CONTRACT_VERSION`을 제거했다(G07, `docs/CHANGELOG.md`).
+시그니처와 위반 코드는 8절. 입출력은 JSON으로 직렬화되는 `dict`·`list`·문자열·수·`bool`·`None`이다. 0.4.0에서 v1 공개 API를 모두 제거했다(G07, `docs/CHANGELOG.md`).
 
 | 약속 | 내용 |
 |---|---|
@@ -86,7 +86,7 @@ SkipRule(slot: str, value, skip_item: str)        # slot(괄호 없는 문항.�
 
 ### 8-2. 제거 (0.4.0, G07)
 
-`normalize`, `judge`, `write_record`, `plan`과 문진 스키마 사본(`turn_engine/_schemas/`), `OutputContractError`, `SUPPORTED_RUNTIME_CONTRACT_VERSION`을 제거했다. 이웃 리포(survey-service, release-gate, model-lab, ops-feedback, model-runtime, deploy, synthetic-data, question-authoring)에 이 이름을 import하거나 호출하는 코드는 없음을 grep으로 확인했다(문서 언급만 survey-service/docs).
+v1 공개 API 전부와 문진 스키마 사본(`turn_engine/_schemas/`)을 제거했다. 이웃 리포(survey-service, release-gate, model-lab, ops-feedback, model-runtime, deploy, synthetic-data, question-authoring)에 이 이름을 import하거나 호출하는 코드는 없음을 grep으로 확인했다(문서 언급만 survey-service/docs).
 
 ### 8-3. 소비하는 것
 

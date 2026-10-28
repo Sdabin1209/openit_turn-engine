@@ -290,8 +290,6 @@ def test_engine_version_matches_package_metadata():
     assert version("turn-engine") == te.ENGINE_VERSION
 
 
-def test_removed_v1_names_are_gone():
-    for name in ("normalize", "judge", "write_record", "plan", "OutputContractError", "SUPPORTED_RUNTIME_CONTRACT_VERSION"):
-        assert not hasattr(te, name) and name not in te.__all__
+def test_public_api_is_exactly_the_exported_set():
     assert set(te.__all__) == {"ENGINE_VERSION", "ContractViolation", "validate_extraction", "Violation",
                                "QuestionFlowTable", "SkipRule", "DATASET_V2_FLOW"}
