@@ -25,3 +25,8 @@
 ## 세션을 끝낼 때
 
 `docs/STATUS.md`에 한 일, 남은 일, 막힌 것을 적는다.
+
+## 개발 명령
+
+- 환경 준비: `bash scripts/setup-env.sh` (정본. `.venv` 생성·재사용, `requirements.lock`과 같게 맞춤)
+- 시험: `.venv/bin/python -m pytest tests -q`

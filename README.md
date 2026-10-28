@@ -48,15 +48,12 @@ flowchart LR
 전제: Python 3.10 이상, boundary-contracts를 받을 수 있는 GitHub SSH 키. Docker, GPU, 네트워크 서버는 필요 없다(`docs/runbook.md`).
 
 ```
-cd turn-engine
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e ".[dev]"                       # 설치
-python -m pytest tests -q                     # 시험
-python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
+bash scripts/setup-env.sh                     # 설치(.venv 생성, requirements.lock과 같게 맞춤, 다시 실행해도 안전)
+.venv/bin/python -m pytest tests -q           # 시험
+.venv/bin/python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 ```
 
-잠금 파일로 설치하려면 `pip install -r requirements.lock` 뒤 `pip install -e . --no-deps`. 이 영역은 서버가 없어 스모크 테스트와 이미지 빌드는 해당하지 않는다. 비밀 값(NAME_FILE, D84)도 쓰지 않는다. 학습 데이터 전수 검증은 학습 서버를 읽기 전용으로 읽는 명령이라(`docs/runbook.md`) 이 README에는 적지 않았고 이번에도 돌리지 않았다.
+환경 준비의 정본은 `scripts/setup-env.sh`다(`requirements.lock` 설치 뒤 `pip install -e ".[dev]" --no-deps`). 이 영역은 서버가 없어 스모크 테스트와 이미지 빌드는 해당하지 않는다. 비밀 값(NAME_FILE, D84)도 쓰지 않는다. 학습 데이터 전수 검증은 학습 서버를 읽기 전용으로 읽는 명령이라(`docs/runbook.md`) 이 README에는 적지 않았고 이번에도 돌리지 않았다.
 
 
 ## 5. 현재 상태

@@ -3,11 +3,7 @@
 ## 개발 환경
 
 ```
-cd turn-engine
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e ".[dev]"    # boundary-contracts를 태그 v2.0.2로 git+ssh에서 설치한다(SSH 키 필요)
-# 잠금: requirements.lock (깨끗한 환경에서 pip install -r requirements.lock 후 pip install -e . --no-deps)
+bash scripts/setup-env.sh    # .venv 생성·재사용, requirements.lock과 같게 맞춤(SSH 키 필요). 정본은 이 스크립트
 ```
 
 `.venv/`는 `.gitignore`에 있다. GPU, 네트워크, 컨테이너는 필요 없다. 서비스가 없으므로 이미지 빌드와 `/healthz` 확인은 해당하지 않는다.
