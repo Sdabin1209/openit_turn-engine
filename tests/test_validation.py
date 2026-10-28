@@ -229,13 +229,13 @@ def test_dataset_v2_flow_shape():
 
 # 의존
 
-def test_boundary_contracts_pinned_to_v2_0_2():
+def test_boundary_contracts_pinned_to_v2_1_0():
     text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "openit_boundary-contracts.git@v2.0.2" in text
+    assert "openit_boundary-contracts.git@v2.1.0" in text
     import boundary_contracts
     from importlib.metadata import version
-    assert version("boundary-contracts") == "2.0.2"
-    assert boundary_contracts.PIPELINE_SCHEMA_VERSION == "2.0"
+    assert version("boundary-contracts") == "2.1.0"
+    assert boundary_contracts.PIPELINE_SCHEMA_VERSION == "2.1"
 
 
 # 학습 데이터 전수(선택): 환경변수에 JSONL 경로를 주면 돈다. 서버 데이터는 읽기 전용으로 표준입력에 흘려 검사하는
@@ -272,7 +272,7 @@ def test_dataset_script_reports_violation_exit_code(tmp_path):
 
 def test_engine_version_matches_package_metadata():
     text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert te.ENGINE_VERSION == "0.4.0"
+    assert te.ENGINE_VERSION == "0.4.1"
     assert f'version = "{te.ENGINE_VERSION}"' in text
 
 

@@ -3,7 +3,7 @@ from ._common import ContractViolation
 from .flow import DATASET_V2_FLOW, QuestionFlowTable, SkipRule
 from .validation import Violation, validate_extraction
 
-ENGINE_VERSION = "0.4.0"
+ENGINE_VERSION = "0.4.1"
 
 __all__ = [
     "ENGINE_VERSION", "ContractViolation",

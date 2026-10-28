@@ -2,7 +2,7 @@
 
 ## 1. 소개
 
-문진 AI가 내놓은 "환자 답변 해석"이 말이 되는지 규칙으로 다시 검사하는 작은 파이썬 라이브러리다(현재 0.4.0).
+문진 AI가 내놓은 "환자 답변 해석"이 말이 되는지 규칙으로 다시 검사하는 작은 파이썬 라이브러리다(현재 0.4.1).
 
 모델(LoRA-A)은 환자의 말을 읽고 "어떤 칸에 무슨 값을 저장하고, 다음에 어떤 문항을 물을지"를 JSON으로 낸다. 모델은 가끔 틀린다. 이 라이브러리는 그 JSON이 계약의 의미 규칙(저장 대상, 다음 문항, 건너뛰기 순서, 저장 여부)을 지키는지 확인해 위반 목록을 돌려준다. 의료 기록에 틀린 값이 들어가는 것보다 다시 묻는 편이 안전하다는 이유로 둔 안전망이다(`docs/boundary.md` 8절, INTERFACES I8).
 하지 않는 것: 모델 호출, 저장소 접근, 네트워크, 파일 읽기·쓰기, 서버 실행. 서비스가 아니라 라이브러리라서 포트, `/healthz`, 컨테이너 이미지가 없다(`docs/boundary.md` 1절). 형식(스키마) 검증은 model-runtime의 몫이다. 0.4.0에서 예전 v1 함수(`normalize`, `judge`, `write_record`, `plan`)를 제거했다.
@@ -11,7 +11,7 @@
 
 | 방향 | 상대 영역 | 인터페이스 | 내용 |
 |---|---|---|---|
-| 받음 | boundary-contracts | v2.0.2 태그의 `ActionExtractionInput`, `ActionExtraction` 스키마 | 입력 형식 검증에 사용. 복사본 없음 |
+| 받음 | boundary-contracts | v2.1.0 태그의 `ActionExtractionInput`, `ActionExtraction` 스키마 | 입력 형식 검증에 사용. 복사본 없음 |
 | 받음 | survey-service(호출자) | I8 호출 | 모델 입력, 모델 출력, 문항 순서 표를 인자로 넘김 |
 | 줌 | survey-service | I8 `validate_extraction` 등 | 위반 목록. 위반이 있으면 `OUTPUT_INVALID`와 같게 처리(D75-1) |
 | 줌 | model-lab, synthetic-data, model-runtime(시험) | `ENGINE_VERSION`, `DATASET_V2_FLOW`, `validate_extraction` | 같은 버전이면 같은 결과 |
@@ -28,7 +28,7 @@
 | `turn_engine/_common.py` | `ContractViolation` |
 | `tests/test_validation.py` | 검증 규칙, 결정성, 의존 태그, 버전, 공개 API 시험 |
 | `scripts/validate_dataset_a.py` | 학습 데이터 A를 표준입력으로 받아 전수 검사 |
-| `pyproject.toml`, `requirements.lock` | 버전과 의존(boundary-contracts v2.0.2 고정) |
+| `pyproject.toml`, `requirements.lock` | 버전과 의존(boundary-contracts v2.1.0 고정) |
 | `docs/` | 아래 7절 |
 
 ```mermaid
@@ -63,6 +63,7 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 ## 5. 현재 상태
 
 확인된 것:
+- 버전 0.4.1(계약 v2.1.0 정렬 릴리스, docs/CHANGELOG.md). 아래 0.4.0 서술은 그 시점의 기록이다. 0.4.1: `.venv`에 계약 v2.1.0을 `git+file`로 설치한 뒤 `python -m pytest tests -q`: **39 통과, 1 건너뜀**(실행).
 - 버전 0.4.0, 태그 `v0.4.0`은 커밋 23973fc를 가리키고 원격(origin)에도 올라가 있다(`git ls-remote --tags origin`으로 확인). `main`은 그 위에 README 커밋 하나가 더 있다.
 - `.venv`에서 39 통과, 1 건너뜀(실행). 건너뛴 시험은 학습 데이터 A 전수 검사이며 환경 변수 `TURN_ENGINE_DATASET_A`가 없어서다(`pytest -rs`로 확인).
 - 0.3.0 시점에 학습 데이터 A 5,077행 전수 위반 0(`docs/CHANGELOG.md` 0.3.0 항목). 0.4.0에서 다시 돌린 기록은 찾지 못했다(`docs/STATUS.md`는 0.3.x와 출력이 같다고만 함).

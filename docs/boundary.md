@@ -26,7 +26,7 @@ from turn_engine import ENGINE_VERSION, ContractViolation
 
 ## 3. 소비하는 것
 
-- 소비하는 계약: boundary-contracts `v2.0.2`(태그)의 `ActionExtractionInput`, `ActionExtraction`. 복사본은 만들지 않는다.
+- 소비하는 계약: boundary-contracts `v2.1.0`(태그)의 `ActionExtractionInput`, `ActionExtraction`. 복사본은 만들지 않는다.
 - 문진 스키마(`../survey-service/schema`)는 이 라이브러리가 읽지 않는다(0.4.0부터 정수 버전 의존 없음).
 - 외부 패키지: `jsonschema`. Python 3.10 이상.
 
@@ -90,4 +90,4 @@ SkipRule(slot: str, value, skip_item: str)        # slot(괄호 없는 문항.�
 
 ### 8-3. 소비하는 것
 
-- boundary-contracts `v2.0.2`(태그로 설치. `pyproject.toml`, `requirements.lock`). 쓰는 것은 `boundary_contracts.validator("ActionExtractionInput"/"ActionExtraction")`뿐이다.
+- boundary-contracts `v2.1.0`(태그로 설치. `pyproject.toml`, `requirements.lock`). 쓰는 것은 `boundary_contracts.validator("ActionExtractionInput"/"ActionExtraction")`뿐이다.
