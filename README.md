@@ -58,12 +58,12 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 
 잠금 파일로 설치하려면 `pip install -r requirements.lock` 뒤 `pip install -e . --no-deps`. 이 영역은 서버가 없어 스모크 테스트와 이미지 빌드는 해당하지 않는다. 비밀 값(NAME_FILE, D84)도 쓰지 않는다. 학습 데이터 전수 검증은 학습 서버를 읽기 전용으로 읽는 명령이라(`docs/runbook.md`) 이 README에는 적지 않았고 이번에도 돌리지 않았다.
 
-이 문서를 쓰는 세션에서 직접 돌린 것: `git status`, `pytest --collect-only`(40개 수집), `pytest tests -q`(39 통과, 1 건너뜀, 경고 2), `ENGINE_VERSION` 출력(0.4.0). `pip install`은 이미 있는 `.venv`를 썼고 새로 설치하지 않았다. 새 환경에서의 설치는 확인하지 않았다.
+이 문서를 쓰는 세션에서 직접 돌린 것: `git status`, `pytest tests -q`(39 통과, 1 건너뜀, 경고 2, 2026-10-28), 낡은 `turn_engine.egg-info`를 지우고 `pip install -e . --no-deps`로 설치 메타데이터를 현재 버전에 맞춤. 새 환경에서의 설치는 확인하지 않았다.
 
 ## 5. 현재 상태
 
 확인된 것:
-- 버전 0.4.1(계약 v2.1.0 정렬 릴리스, docs/CHANGELOG.md). 아래 0.4.0 서술은 그 시점의 기록이다. 0.4.1: `.venv`에 계약 v2.1.0을 `git+file`로 설치한 뒤 `python -m pytest tests -q`: **39 통과, 1 건너뜀**(실행).
+- 현재 버전은 `pyproject.toml`(이력은 docs/CHANGELOG.md). 아래 0.4.0 서술은 그 시점의 기록이다. `.venv`에서 `python -m pytest tests -q`: **39 통과, 1 건너뜀**(실행, 2026-10-28).
 - 버전 0.4.0, 태그 `v0.4.0`은 커밋 23973fc를 가리키고 원격(origin)에도 올라가 있다(`git ls-remote --tags origin`으로 확인). `main`은 그 위에 README 커밋 하나가 더 있다.
 - `.venv`에서 39 통과, 1 건너뜀(실행). 건너뛴 시험은 학습 데이터 A 전수 검사이며 환경 변수 `TURN_ENGINE_DATASET_A`가 없어서다(`pytest -rs`로 확인).
 - 0.3.0 시점에 학습 데이터 A 5,077행 전수 위반 0(`docs/CHANGELOG.md` 0.3.0 항목). 0.4.0에서 다시 돌린 기록은 찾지 못했다(`docs/STATUS.md`는 0.3.x와 출력이 같다고만 함).
