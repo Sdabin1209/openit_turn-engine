@@ -58,14 +58,12 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 
 잠금 파일로 설치하려면 `pip install -r requirements.lock` 뒤 `pip install -e . --no-deps`. 이 영역은 서버가 없어 스모크 테스트와 이미지 빌드는 해당하지 않는다. 비밀 값(NAME_FILE, D84)도 쓰지 않는다. 학습 데이터 전수 검증은 학습 서버를 읽기 전용으로 읽는 명령이라(`docs/runbook.md`) 이 README에는 적지 않았고 이번에도 돌리지 않았다.
 
-이 문서를 쓰는 세션에서 직접 돌린 것: `git status`, `pytest tests -q`(39 통과, 1 건너뜀, 경고 2, 2026-10-28), 낡은 `turn_engine.egg-info`를 지우고 `pip install -e . --no-deps`로 설치 메타데이터를 현재 버전에 맞춤. 새 환경에서의 설치는 확인하지 않았다.
 
 ## 5. 현재 상태
 
 확인된 것:
-- 현재 버전은 `pyproject.toml`(이력은 docs/CHANGELOG.md). 아래 0.4.0 서술은 그 시점의 기록이다. `.venv`에서 `python -m pytest tests -q`: **39 통과, 1 건너뜀**(실행, 2026-10-28).
-- 버전 0.4.0, 태그 `v0.4.0`은 커밋 23973fc를 가리키고 원격(origin)에도 올라가 있다(`git ls-remote --tags origin`으로 확인). `main`은 그 위에 README 커밋 하나가 더 있다.
-- `.venv`에서 39 통과, 1 건너뜀(실행). 건너뛴 시험은 학습 데이터 A 전수 검사이며 환경 변수 `TURN_ENGINE_DATASET_A`가 없어서다(`pytest -rs`로 확인).
+- 현재 버전은 `pyproject.toml`(이력은 docs/CHANGELOG.md). `.venv`에서 `python -m pytest tests -q`: **39 통과, 1 건너뜀**(실행, 2026-10-28).
+- 건너뛴 시험은 학습 데이터 A 전수 검사이며 환경 변수 `TURN_ENGINE_DATASET_A`가 없어서다(`pytest -rs`로 확인).
 - 0.3.0 시점에 학습 데이터 A 5,077행 전수 위반 0(`docs/CHANGELOG.md` 0.3.0 항목). 0.4.0에서 다시 돌린 기록은 찾지 못했다(`docs/STATUS.md`는 0.3.x와 출력이 같다고만 함).
 
 확인하지 못한 것:
@@ -82,7 +80,7 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 | U11 | `validate_extraction` 기반 의미 위반율 지표를 평가에 넣지 않음 | 열림 | 다른 영역·사용자 결정(boundary 규칙과 충돌, 허락 필요, 학습 담당 확인) |
 | U12 | 두 번째 독립 머신에서의 영역 시험 확인 | 열림 | 다른 환경 필요(GPU 아님) |
 
-대장에는 없지만 이 리포 문서에 열려 있는 것: 없다. CR-010은 D99로 종결했다(변환 함수를 더하지 않음, `DATASET_V2_FLOW`는 시험용). v1 전용 문서에는 '보관(v1)' 표시를 했고 삭제는 다음 릴리스에서 한다(D99, `docs/STATUS.md`).
+대장에는 없지만 이 리포 문서에 열려 있는 것: 없다. CR-010은 D99로 종결했다(변환 함수를 더하지 않음, `DATASET_V2_FLOW`는 시험용). `docs/rules/`의 v1 전용 문서는 삭제했다(D99, 내용은 git 이력).
 
 ## 7. 더 자세한 문서
 

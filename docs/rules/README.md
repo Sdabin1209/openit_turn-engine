@@ -2,25 +2,12 @@
 
 이 문서들은 각 필드를 사용해야 하는 상황과 담당 컴포넌트의 기대 책임을 설명한다. Schema 프로젝트의 실행 코드나 자동 검사 결과가 아니다. 예를 들어 저장 효과나 질문 순서의 설명이 있다고 해서 검증기가 그 동작을 실행하는 것은 아니다.
 
-문서 목록은 `manifest.yaml`에 있다. `principles.md`는 설계 원칙, `mapping.md`는 역할과 계약의 대응, `timing.md`는 조회 시점, 컴포넌트별 문서는 업무 요구, `verification.md`는 이 프로젝트의 검사 범위를 설명한다. `trace_contract.md`는 기록 형식을 설명한다.
+문서 목록은 `manifest.yaml`에 있다(원본 저장소 기준 목록이라 이 폴더에 없는 문서도 가리킨다). 이 폴더에 남은 것은 `principles.md`(설계 원칙)와 `verification.md`(원본 스키마 저장소의 검증 범위)다.
 
 값의 실제 구조는 `../contracts/`의 Schema·필드 설명이 정한다. 추가 자료형 제안은 `../contracts/proposals.yaml`에 있으며 현행 계약과 구분한다. 예시 발화·문항 값은 설명용이고, 실제 선택지·범위·기준은 QuestionBank 데이터가 정한다.
 
-## 문서별 판단 (2026-10-28, D99)
+## 정리 (D99)
 
-각 문서를 읽고 판단했다. 판단 기준: 이 리포의 현재 기능(`validate_extraction` 하나, v2 LoRA-A 출력 의미 검증)에 쓰이는 규칙인가. v1 파이프라인(정규화기·판정기·저장 판단·Plan, 오케스트레이터 전제)의 규칙이면 v1 전용이다. 이 리포는 이 문서들을 읽는 코드가 없다. 아래 '삭제'는 다음 릴리스에서 하며 이번에는 하지 않았다.
+v1 파이프라인(정규화기·판정기·저장 판단·Plan, 오케스트레이터 전제)의 규칙 문서 7편(answer_normalizer, answer_judge, record_writer, dialogue_planner, mapping, preconditions, timing)은 삭제했다. 이 리포의 기능은 `validate_extraction` 하나이고 그 문서들을 읽는 코드가 없다. 내용은 git 이력에 있다.
 
-| 문서 | 판단 | 근거 | 처리 |
-|---|---|---|---|
-| answer_normalizer.md | v1 전용 | v1 정규화기 규칙. 함수는 0.4.0에서 제거(ADR 0005) | 보관 표시, 삭제 예정 |
-| answer_judge.md | v1 전용 | v1 판정기 규칙. 함수 제거됨 | 보관 표시, 삭제 예정 |
-| record_writer.md | v1 전용 | v1 저장 판단 규칙. 함수 제거됨 | 보관 표시, 삭제 예정 |
-| dialogue_planner.md | v1 전용 | v1 Plan 규칙. 함수 제거됨 | 보관 표시, 삭제 예정 |
-| mapping.md | v1 전용 | v1 역할(Normalizer·Judge·Writer·Planner)과 계약 대응 | 보관 표시, 삭제 예정 |
-| preconditions.md | v1 전용 | v1 오케스트레이터(LangGraph)의 쓰기 확정·전달 순서. 이 리포는 저장소를 다루지 않음 | 보관 표시, 삭제 예정 |
-| timing.md | v1 전용 | v1 저장소 조회 시점. 이 리포는 저장소를 다루지 않음 | 보관 표시, 삭제 예정 |
-| principles.md | v2에도 유효(일부) | 원칙 3(블랙박스), 7(사실만 저장), 8(선행 조건), 9(출력 계약 책임), 10(문항 값을 규칙에 적지 않음)은 현재 검증 설계에도 맞다. 일부 문장이 v1 컴포넌트를 가리킨다 | 그대로 둠 |
-| verification.md | 이 리포와 무관(v1·v2 구분 없음) | 원본 스키마 저장소의 검증 범위 설명이며 turn-engine 기능이 아니다. v1 전용으로 단정할 근거는 없어 표시하지 않았다 | 그대로 둠, 삭제 여부는 다음 릴리스 때 헤드가 판단 |
-| README.md, SOURCE.md, manifest.yaml | 목록·출처 | 위 문서들의 목록과 출처. 문서가 삭제될 때 함께 고친다 | 그대로 둠 |
-
-주의: README 위쪽 설명과 manifest.yaml은 이 폴더에 없는 문서(utterance_parser, orchestrator 등)도 가리킨다. 원본 저장소 기준 목록이다.
+`principles.md`는 원칙 3, 7, 8, 9, 10이 현재 검증 설계에도 맞아 두었다. 컴포넌트·LangGraph를 가리키는 문장은 v1 파이프라인 시절의 표현이며, 현재 이 리포의 구조는 `docs/design.md`가 정본이다. `verification.md`는 이 리포 기능이 아니라 원본 스키마 저장소의 검증 범위 설명이다.
