@@ -246,7 +246,8 @@ def test_boundary_contracts_pinned():
     assert _pin((ROOT / "requirements.lock").read_text(encoding="utf-8")) == pin
     assert version("boundary-contracts") == pin
     major, minor, _ = pin.split(".")
-    assert boundary_contracts.PIPELINE_SCHEMA_VERSION.startswith(f"{major}.")
+    # 기대값은 pin의 major.minor이고, 계약 패키지가 내보내는 상수와 정확히 같아야 한다.
+    assert boundary_contracts.PIPELINE_SCHEMA_VERSION == f"{major}.{minor}"
 
 
 # 학습 데이터 전수(선택): 환경변수에 JSONL 경로를 주면 돈다. 서버 데이터는 읽기 전용으로 표준입력에 흘려 검사하는
