@@ -1,6 +1,6 @@
 # CR-002 문항 전체·대상 없음에 붙은 값 항목의 취급
 
-- 대상: `docs/rules/answer_normalizer.md` 5절, `answer_judge.md` 6절 표
+- 대상: v1 규칙 문서 answer_normalizer 5절, answer_judge 6절 표(보관)
 - 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것

@@ -1,6 +1,6 @@
 # CR-007 규칙 용어와 Action·AlertKind 대응
 
-- 대상: `docs/rules/dialogue_planner.md` 8-1절 규칙 2·14, 규칙 1, `PlannerOutput`의 `Action`, `AlertKind`, `StaffAlertReason`
+- 대상: v1 규칙 문서 dialogue_planner 8-1절(보관) 규칙 2·14, 규칙 1, `PlannerOutput`의 `Action`, `AlertKind`, `StaffAlertReason`
 - 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것

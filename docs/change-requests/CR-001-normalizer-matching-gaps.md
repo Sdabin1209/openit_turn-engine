@@ -1,6 +1,6 @@
 # CR-001 말을 선택지·단위에 잇는 기준의 빈칸
 
-- 대상: `docs/rules/answer_normalizer.md` 5절 규칙 8, 규칙 1·2
+- 대상: v1 규칙 문서 answer_normalizer 5절 규칙 8, 규칙 1·2(보관)
 - 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것

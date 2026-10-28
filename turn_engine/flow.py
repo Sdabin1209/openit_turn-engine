@@ -1,8 +1,10 @@
 """문항 순서·건너뛰기 표(QuestionFlowTable). 출력 검증(`validate_extraction`)이 입력으로 받는다. 순수 데이터.
 
 계약(boundary-contracts v2.0.0 INTERFACES I8)은 표의 형식을 정하지 않는다. 이 표는 turn-engine이 정한 형식이다(제안).
-문진 스키마의 QuestionBank에서 이 표를 만드는 변환은 아직 없다(미정, docs/change-requests/CR-010).
-`DATASET_V2_FLOW`는 학습 데이터셋 v2(IO_SPEC v2)가 쓰는 25개 문항의 순서와 건너뛰기 7건이다.
+서비스가 쓰는 표는 survey-service가 문진 스키마의 question_flow.json에서 만들어 넘긴다. 이 라이브러리는 그 변환을
+갖지 않는다(D99, docs/change-requests/CR-010 종결).
+`DATASET_V2_FLOW`는 시험용 고정값이다. 서비스 동작의 근거로 쓰지 않는다. 학습 데이터셋 v2(IO_SPEC v2)가 쓰는
+31개 문항의 순서와 건너뛰기 7건이다.
 """
 from __future__ import annotations
 
@@ -57,6 +59,7 @@ class QuestionFlowTable:
         return self.order[i] if i < len(self.order) else "END"
 
 
+# 시험용 고정값(D99). 출처는 boundary-contracts/tools/validate_dataset_v2.py의 ORDER/SKIPS와 같은 값이다.
 DATASET_V2_FLOW = QuestionFlowTable(
     order=["Q1.D%02d" % i for i in range(1, 12)] + ["Q2.D%02d" % i for i in range(1, 6)] + [
         "Q3", "Q4", "Q4_1", "Q5", "Q5_1", "Q6", "Q6_1", "Q7", "Q7_1", "Q7_2", "Q8_1", "Q8_2", "Q9_1", "Q9_2", "Q10"],

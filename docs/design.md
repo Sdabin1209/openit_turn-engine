@@ -15,4 +15,4 @@ tests/test_validation.py   검증 규칙, 결정성, 의존 태그, 버전, 공�
 scripts/validate_dataset_a.py   학습 데이터 A 전수 검증(읽기 전용 스트림)
 ```
 
-검사 규칙과 위반 코드는 `docs/boundary.md` 8-1. `docs/rules/`와 `docs/change-requests/CR-001~009`는 v1 시점의 기록이며 구현은 없다.
+검사 규칙과 위반 코드는 `docs/boundary.md` 8-1. `docs/change-requests/CR-001~009`는 v1 시점의 기록이며 구현은 없다.

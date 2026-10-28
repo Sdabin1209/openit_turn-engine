@@ -1,6 +1,6 @@
 # CR-004 확인 대기 ID를 결정적으로 만드는 방법
 
-- 대상: `docs/rules/record_writer.md` 7절 규칙 3("확인 대기 ID는 확인 대기 둠마다 새로 만든다"), `RecordWriterInput`
+- 대상: v1 규칙 문서 record_writer 7절(보관) 규칙 3("확인 대기 ID는 확인 대기 둠마다 새로 만든다"), `RecordWriterInput`
 - 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것

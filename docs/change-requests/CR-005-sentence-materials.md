@@ -1,6 +1,6 @@
 # CR-005 문장 재료(`sentence_materials`) 선택 규칙과 안내 채울 값
 
-- 대상: `docs/rules/dialogue_planner.md` 8절, `PlannerOutput.directive.sentence_materials`, `GuideItem.fill_value`
+- 대상: v1 규칙 문서 dialogue_planner 8절(보관), `PlannerOutput.directive.sentence_materials`, `GuideItem.fill_value`
 - 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것

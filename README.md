@@ -24,7 +24,7 @@
 |---|---|
 | `turn_engine/__init__.py` | 공개 API 7개와 `ENGINE_VERSION` |
 | `turn_engine/validation.py` | `validate_extraction`: 스키마 검사 뒤 의미 검사 |
-| `turn_engine/flow.py` | `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`(31문항, 건너뛰기 7건, 임시) |
+| `turn_engine/flow.py` | `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`(31문항, 건너뛰기 7건, 시험용 고정값, D99) |
 | `turn_engine/_common.py` | `ContractViolation` |
 | `tests/test_validation.py` | 검증 규칙, 결정성, 의존 태그, 버전, 공개 API 시험 |
 | `scripts/validate_dataset_a.py` | 학습 데이터 A를 표준입력으로 받아 전수 검사 |
@@ -81,7 +81,7 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 | U11 | `validate_extraction` 기반 의미 위반율 지표를 평가에 넣지 않음 | 열림 | 다른 영역·사용자 결정(boundary 규칙과 충돌, 허락 필요, 학습 담당 확인) |
 | U12 | 두 번째 독립 머신에서의 영역 시험 확인 | 열림 | 다른 환경 필요(GPU 아님) |
 
-대장에는 없지만 이 리포 문서에 열려 있는 것: CR-010(`QuestionFlowTable`을 문진 스키마에서 만드는 방법과 출처. `DATASET_V2_FLOW`는 임시), `docs/rules/`와 CR-001~009를 지울지(둘 다 헤드 결정 대기, `docs/STATUS.md`). CR-010은 대장 ID가 없고, 현재 API 사용과 0.4.0 릴리스를 막지 않는다.
+대장에는 없지만 이 리포 문서에 열려 있는 것: 없다. CR-010은 D99로 종결했다(변환 함수를 더하지 않음, `DATASET_V2_FLOW`는 시험용). v1 전용 문서에는 '보관(v1)' 표시를 했고 삭제는 다음 릴리스에서 한다(D99, `docs/STATUS.md`).
 
 ## 7. 더 자세한 문서
 
@@ -94,8 +94,7 @@ python -c "import turn_engine; print(turn_engine.ENGINE_VERSION)"
 | `docs/runbook.md` | 개발 환경, 시험, 학습 데이터 검증, 릴리스 절차 |
 | `docs/STATUS.md` | 마지막 세션 상태 |
 | `docs/CHANGELOG.md` | 버전별 변경 이력 |
-| `docs/change-requests/` | 헤드에게 보낸 변경 요청(CR-001~009 역사 기록, CR-010 열림) |
-| `docs/rules/` | v1 시점 업무 규칙 기록(구현 없음) |
+| `docs/change-requests/` | 헤드에게 보낸 변경 요청(CR-001~009 v1 시점의 기록, CR-010 종결) |
 | `docs/adr/` | 구조 선택의 '왜'(D89): 라이브러리, 검증 경계, 순수 설계, I8 범위, v1 제거, 계약 태그 의존, 전수 시험 옵션 |
 
 ### ADR 목록

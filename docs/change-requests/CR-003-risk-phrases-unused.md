@@ -1,6 +1,6 @@
 # CR-003 위험 문구(`risk_phrases`)와 `utterance` 사용 규칙
 
-- 대상: `AnswerJudgeInput.utterance`, `AnswerJudgeInput.risk_phrases`, `docs/rules/answer_judge.md`
+- 대상: `AnswerJudgeInput.utterance`, `AnswerJudgeInput.risk_phrases`, v1 규칙 문서 answer_judge(보관)
 - 상태: 결정함(아래 "결정" 절)
 
 ## 부족한 것

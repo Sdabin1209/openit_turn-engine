@@ -1,6 +1,13 @@
 # CR-010: 문항 순서·건너뛰기 표(QuestionFlowTable)의 출처
 
-상태: 열림(헤드 결정 필요). 작성 2026-10-27, boundary-contracts v2.0.0 이전 작업에서.
+상태: **종결**(2026-10-28, 헤드 결정 D99, `head/docs/DECISIONS.md`). 작성 2026-10-27, boundary-contracts v2.0.0 이전 작업에서.
+
+## 종결 근거 (D99)
+
+- 결정: turn-engine에 QuestionBank에서 `QuestionFlowTable`을 만드는 변환 함수를 더하지 않는다. 표는 survey-service가 문진 스키마의 `question_flow.json`(계약 QuestionFlow)에서 만들어 넘긴다. 아래 요청 1은 이 결정으로 답이 났고, 요청 2의 `DATASET_V2_FLOW`는 시험용 고정값으로만 남는다.
+- 헤드가 확인한 것: survey-service의 `flow.py`가 이미 `QuestionFlowTable`을 만든다(D99). 이 리포는 이웃 코드를 읽지 않으므로 그 사실을 이 세션에서 다시 확인하지 않았다. 사실은 D99 한 곳에 있다.
+- 되돌리는 조건(D99): survey-service가 표를 직접 만들 수 없게 되면 변환 함수를 더한다.
+- 아래 "확인한 것"과 "지금 한 것"은 작성 시점의 기록이다.
 
 ## 확인한 것
 
