@@ -2,7 +2,7 @@
 
 ## 1. 소개
 
-문진 AI가 내놓은 "환자 답변 해석"이 말이 되는지 규칙으로 다시 검사하는 작은 파이썬 라이브러리다(현재 0.4.1).
+문진 AI가 내놓은 "환자 답변 해석"이 말이 되는지 규칙으로 다시 검사하는 작은 파이썬 라이브러리다(현재 버전은 `turn_engine.ENGINE_VERSION`, 정본은 `pyproject.toml`).
 
 모델(LoRA-A)은 환자의 말을 읽고 "어떤 칸에 무슨 값을 저장하고, 다음에 어떤 문항을 물을지"를 JSON으로 낸다. 모델은 가끔 틀린다. 이 라이브러리는 그 JSON이 계약의 의미 규칙(저장 대상, 다음 문항, 건너뛰기 순서, 저장 여부)을 지키는지 확인해 위반 목록을 돌려준다. 의료 기록에 틀린 값이 들어가는 것보다 다시 묻는 편이 안전하다는 이유로 둔 안전망이다(`docs/boundary.md` 8절, INTERFACES I8).
 하지 않는 것: 모델 호출, 저장소 접근, 네트워크, 파일 읽기·쓰기, 서버 실행. 서비스가 아니라 라이브러리라서 포트, `/healthz`, 컨테이너 이미지가 없다(`docs/boundary.md` 1절). 형식(스키마) 검증은 model-runtime의 몫이다. 0.4.0에서 예전 v1 함수(`normalize`, `judge`, `write_record`, `plan`)를 제거했다.
@@ -11,7 +11,7 @@
 
 | 방향 | 상대 영역 | 인터페이스 | 내용 |
 |---|---|---|---|
-| 받음 | boundary-contracts | v2.1.0 태그의 `ActionExtractionInput`, `ActionExtraction` 스키마 | 입력 형식 검증에 사용. 복사본 없음 |
+| 받음 | boundary-contracts | `pyproject.toml`이 고정한 태그의 `ActionExtractionInput`, `ActionExtraction` 스키마 | 입력 형식 검증에 사용. 복사본 없음 |
 | 받음 | survey-service(호출자) | I8 호출 | 모델 입력, 모델 출력, 문항 순서 표를 인자로 넘김 |
 | 줌 | survey-service | I8 `validate_extraction` 등 | 위반 목록. 위반이 있으면 `OUTPUT_INVALID`와 같게 처리(D75-1) |
 | 줌 | model-lab, synthetic-data, model-runtime(시험) | `ENGINE_VERSION`, `DATASET_V2_FLOW`, `validate_extraction` | 같은 버전이면 같은 결과 |
@@ -24,11 +24,11 @@
 |---|---|
 | `turn_engine/__init__.py` | 공개 API 7개와 `ENGINE_VERSION` |
 | `turn_engine/validation.py` | `validate_extraction`: 스키마 검사 뒤 의미 검사 |
-| `turn_engine/flow.py` | `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`(31문항, 건너뛰기 7건, 시험용 고정값, D99) |
+| `turn_engine/flow.py` | `QuestionFlowTable`, `SkipRule`, `DATASET_V2_FLOW`(학습 데이터 v2의 문항 순서와 건너뛰기, 시험용 고정값, D99. 개수는 이 파일이 정본) |
 | `turn_engine/_common.py` | `ContractViolation` |
 | `tests/test_validation.py` | 검증 규칙, 결정성, 의존 태그, 버전, 공개 API 시험 |
 | `scripts/validate_dataset_a.py` | 학습 데이터 A를 표준입력으로 받아 전수 검사 |
-| `pyproject.toml`, `requirements.lock` | 버전과 의존(boundary-contracts v2.1.0 고정) |
+| `pyproject.toml`, `requirements.lock` | 버전과 의존(boundary-contracts 태그 고정) |
 | `docs/` | 아래 7절 |
 
 ```mermaid

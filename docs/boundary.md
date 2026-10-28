@@ -26,7 +26,7 @@ from turn_engine import ENGINE_VERSION, ContractViolation
 
 ## 3. 소비하는 것
 
-- 소비하는 계약: boundary-contracts `v2.1.0`(태그)의 `ActionExtractionInput`, `ActionExtraction`. 복사본은 만들지 않는다.
+- 소비하는 계약: boundary-contracts(태그는 `pyproject.toml`이 정본)의 `ActionExtractionInput`, `ActionExtraction`. 복사본은 만들지 않는다.
 - 문진 스키마(`../survey-service/schema`)는 이 라이브러리가 읽지 않는다(0.4.0부터 정수 버전 의존 없음).
 - 외부 패키지: `jsonschema`. Python 3.10 이상.
 
@@ -82,7 +82,7 @@ SkipRule(slot: str, value, skip_item: str)        # slot(괄호 없는 문항.�
 - 위반 코드: `OUTPUT_SCHEMA`, `TARGET_NOT_IN_VALUES`, `NEXT_ITEM_MISMATCH`, `SKIP_ORDER_MISMATCH`, `SAVE_RULE`, `UNKNOWN_ITEM`(문항 순서 표에 없는 문항). 앞의 다섯은 I8 초안이 든 예 중 `OUTPUT_SCHEMA`와 `UNKNOWN_ITEM`을 더한 것이다(제안).
 - 검사 규칙: (a) `targets`는 `values`의 key. (b) REASK·REDIRECT는 `next_item == question_id`, CONFIRM은 `targets` 칸의 문항, NEXT·CORRECT·HOLD·SKIP은 순서·건너뛰기의 다음 문항(한 말에 여러 문항이 나오면 가장 뒤 문항 기준, `save`가 true인 값으로 건너뛰기 판단). 같은 말에서 일부 칸이 채워진 문항으로 넘어가는 것은 위반이 아니다(I8). (c) 건너뛰기를 어기거나 조건 없이 건너뛰면 `SKIP_ORDER_MISMATCH`, 그 밖의 어긋남은 `NEXT_ITEM_MISMATCH`. (d) `save`는 ANSWERED·CORRECTION일 때만 true, MISSING·UNCLEAR·UNKNOWN·REJECTED의 `value`는 null.
 - 위반이 나오면 survey-service는 `OUTPUT_INVALID`와 같게 처리한다(I8, D75-1).
-- `QuestionFlowTable`을 문진 스키마에서 만드는 변환은 이 라이브러리에 없다. survey-service가 만들어 넘긴다(D99, CR-010 종결). `DATASET_V2_FLOW`는 학습 데이터 v2의 31문항·건너뛰기 7건이며 시험용 고정값이다.
+- `QuestionFlowTable`을 문진 스키마에서 만드는 변환은 이 라이브러리에 없다. survey-service가 만들어 넘긴다(D99, CR-010 종결). `DATASET_V2_FLOW`는 학습 데이터 v2의 문항 순서·건너뛰기(`turn_engine/flow.py`가 정본)이며 시험용 고정값이다.
 
 ### 8-2. 제거 (0.4.0, G07)
 
@@ -90,4 +90,4 @@ SkipRule(slot: str, value, skip_item: str)        # slot(괄호 없는 문항.�
 
 ### 8-3. 소비하는 것
 
-- boundary-contracts `v2.1.0`(태그로 설치. `pyproject.toml`, `requirements.lock`). 쓰는 것은 `boundary_contracts.validator("ActionExtractionInput"/"ActionExtraction")`뿐이다.
+- boundary-contracts(태그로 설치, 태그 값은 정본 `pyproject.toml`. `pyproject.toml`, `requirements.lock`). 쓰는 것은 `boundary_contracts.validator("ActionExtractionInput"/"ActionExtraction")`뿐이다.
